@@ -5,72 +5,62 @@
  * @format
  */
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
+  Button,
+  Image,
   StatusBar,
-  StyleSheet,
   Text,
   useColorScheme,
   View,
 } from 'react-native';
-import {
-  Camera,
-  CameraPermissionRequestResult,
-  useCameraDevice,
-} from 'react-native-vision-camera';
-import CameraPermissions from './src/components/CameraPermission';
+import { appStyles } from './styles';
+import CameraComponent from './src/components/Camera';
+import { PhotoFile } from 'react-native-vision-camera';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
-  const camera = useRef<Camera>(null);
+  const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false);
+  const [photo, setPhoto] = useState<PhotoFile | null>(null);
 
-  const device = useCameraDevice('back');
+  const handleToggleCamera = (
+    openState: boolean,
+    photograph?: PhotoFile | null,
+  ) => {
+    if (photograph) setPhoto(photograph);
+    setIsButtonPressed(openState);
+  };
 
-  // make dynamic to user obj
-  const [hasCameraPermission, setHasCameraPermission] =
-    useState<CameraPermissionRequestResult>('denied');
-
-  console.log('camera permission', hasCameraPermission);
-  if (device == null) return;
-  // if (!hasPermission) return <PermissionsPage />
-  // if (device == null) return <NoCameraErrorView />
-
-  if (hasCameraPermission === 'granted') {
-    const handleCameraPermissionsChange = (
-      bool: CameraPermissionRequestResult,
-    ) => {
-      setHasCameraPermission(bool);
-    };
-
-    return (
-      <View style={styles.container}>
-        <CameraPermissions onChangeCamera={handleCameraPermissionsChange} />
-        <Camera
-          ref={camera}
-          style={StyleSheet.absoluteFill}
-          device={device}
-          isActive={true}
-          photo={true}
+  return (
+    <View style={appStyles.container}>
+      <Text style={appStyles.title}>Take a photo?</Text>
+      <Button
+        onPress={() => handleToggleCamera(true)}
+        title="Open Camera"
+        color="#841584"
+        accessibilityLabel="This button launches your phone's camera app"
+      />
+      {isButtonPressed && (
+        <CameraComponent
+          pressed={isButtonPressed}
+          toggleCamera={handleToggleCamera}
         />
-        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-        <NewAppScreen templateFileName="App.tsx" />
-      </View>
-    );
-  } else {
-    <View style={styles.container}>
-      <Text>
-        In order to proceed, you will need to grant permission to your Camera!
-      </Text>
-    </View>;
-  }
-}
+      )}
+      {photo && (
+        <View style={appStyles.imageContainer}>
+          <Image
+            source={{
+              uri: `file://${photo.path}`,
+            }}
+            style={appStyles.fullImage}
+          />
+        </View>
+      )}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+    </View>
+  );
+}
 
 export default App;
