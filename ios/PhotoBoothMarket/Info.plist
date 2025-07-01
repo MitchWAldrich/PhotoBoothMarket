@@ -2,15 +2,19 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-<key>NSCameraUsageDescription</key>
-
 	<!-- added for camera usage -->
+	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs access to your Camera.</string>
-
 	<!-- optionally, if you want to record audio: -->
 	<key>NSMicrophoneUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs access to your Microphone.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>This allows $(PRODUCT_NAME) to save these photos to your camera roll.</string>
+	<!-- / -->
 
+	<!-- added for camera roll access -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>$(PRODUCT_NAME) is requesting access to your Camera Reel.</string>
 	<!-- / -->
 
 	<key>CFBundleDevelopmentRegion</key>
