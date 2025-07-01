@@ -18,14 +18,27 @@ import {
 } from 'react-native';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import { appStyles } from './styles';
-import CameraComponent from './src/components/Camera';
+import CameraComponent from './src/components/Camera/Camera';
 import { PhotoFile } from 'react-native-vision-camera';
+import ImageScroller from './src/components/ImageScroller/ImageScroller';
+import { mockPhotoFiles } from './src/mocks/photofiles';
+import { PhotoFileWithID } from './src/types/PhotoFileWithID';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
+  const takeAPic: PhotoFile | (() => PhotoFile) = {
+    path: './assets/TakeAPicTemp.png',
+    width: 1080,
+    height: 1920,
+    isRawPhoto: true,
+    orientation: 'portrait',
+    isMirrored: false,
+  };
+
   const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false);
-  const [photo, setPhoto] = useState<PhotoFile | null>(null);
+  const [photo, setPhoto] = useState<PhotoFile>(takeAPic);
+  const [photos, setPhotos] = useState<PhotoFileWithID[]>([]);
 
   const hasAndroidPermission = async () => {
     const getCheckPermissionPromise = () => {
@@ -82,12 +95,20 @@ function App() {
     if (photo) CameraRoll.saveAsset(photo.path);
   };
 
-  const handleToggleCamera = (
-    openState: boolean,
-    photograph?: PhotoFile | null,
-  ) => {
-    if (photograph) setPhoto(photograph);
+  const handleToggleCamera = (openState: boolean) => {
     setIsButtonPressed(openState);
+  };
+
+  const handlePassPhotos = (photograph: PhotoFile) => {
+    console.log('passed?', photograph);
+    setPhoto(photograph);
+
+    const newPhotoWithID: PhotoFileWithID = {
+      ...photograph,
+      id: (photos.length + 1).toString(),
+    };
+
+    setPhotos(storedPhotos => [...storedPhotos, newPhotoWithID]);
   };
 
   return (
@@ -101,6 +122,7 @@ function App() {
       />
       {isButtonPressed && (
         <CameraComponent
+          passPhoto={handlePassPhotos}
           pressed={isButtonPressed}
           toggleCamera={handleToggleCamera}
         />
@@ -109,9 +131,13 @@ function App() {
         <>
           <View style={appStyles.imageContainer}>
             <Image
-              source={{
-                uri: `file://${photo.path}`,
-              }}
+              source={
+                photo === takeAPic
+                  ? {
+                      uri: `file://${photo.path}`,
+                    }
+                  : require('./src/assets/TakeAPicTemp.png')
+              }
               style={appStyles.fullImage}
             />
           </View>
@@ -123,7 +149,7 @@ function App() {
           />
         </>
       )}
-
+      <ImageScroller images={photos ?? mockPhotoFiles} />
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
     </View>
   );
