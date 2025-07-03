@@ -11,8 +11,10 @@ import {
   Image,
   PermissionsAndroid,
   Platform,
+  SafeAreaView,
   StatusBar,
   Text,
+  TextInput,
   useColorScheme,
   View,
 } from 'react-native';
@@ -100,7 +102,6 @@ function App() {
   };
 
   const handlePassPhotos = (photograph: PhotoFile) => {
-    console.log('passed?', photograph);
     setPhoto(photograph);
 
     const newPhotoWithID: PhotoFileWithID = {
@@ -111,8 +112,41 @@ function App() {
     setPhotos(storedPhotos => [...storedPhotos, newPhotoWithID]);
   };
 
+  const applyOperaAtelierTwist = () => {
+    // code for Opera Atelier Twist filter
+  };
+
+  const applyMagicFluteFilter = () => {
+    // code for Magic Flute Filters
+  };
+
+  const [client, setClient] = useState<string>('');
+  const [clientEmail, setClientEmail] = useState<string>('');
+  const [customSaying, setCustomSaying] = useState<string>('');
+
   return (
     <View style={appStyles.container}>
+      <Text style={appStyles.title}>Tell us your name:</Text>
+      <TextInput
+        style={appStyles.input}
+        onChangeText={setClient}
+        value={client}
+        placeholder="Name..."
+      />
+      <Text style={appStyles.title}>What is your e-mail?</Text>
+      <TextInput
+        style={appStyles.input}
+        onChangeText={setClientEmail}
+        value={clientEmail}
+        placeholder="E-mail..."
+      />
+      <Text style={appStyles.title}>What goes on your custom sign?</Text>
+      <TextInput
+        style={appStyles.input}
+        onChangeText={setCustomSaying}
+        value={customSaying}
+        placeholder="E-mail..."
+      />
       <Text style={appStyles.title}>Take a photo?</Text>
       <Button
         onPress={() => handleToggleCamera(true)}
@@ -128,7 +162,7 @@ function App() {
         />
       )}
       {photo && (
-        <>
+        <SafeAreaView>
           <View style={appStyles.imageContainer}>
             <Image
               source={
@@ -145,9 +179,21 @@ function App() {
             onPress={savePicture}
             title="Save Photo"
             color="teal"
-            accessibilityLabel="This button launches your phone's camera app"
+            accessibilityLabel="This button saves the photo to your camera roll."
           />
-        </>
+          <Button
+            onPress={applyOperaAtelierTwist}
+            title="The Opera Atelier Twist"
+            color="gold"
+            accessibilityLabel="This button applies an Opera Atelier style filter to your photo"
+          />
+          <Button
+            onPress={applyMagicFluteFilter}
+            title="Magic Flute Filter"
+            color="red"
+            accessibilityLabel="This button applies a Magic Flute filter to your photo"
+          />
+        </SafeAreaView>
       )}
       <ImageScroller images={photos ?? mockPhotoFiles} />
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
