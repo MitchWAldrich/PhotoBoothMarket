@@ -19,6 +19,15 @@ export const appStyles = StyleSheet.create({
     margin: 5,
     resizeMode: 'cover',
   },
+  input: {
+    height: 50,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    backgroundColor: '#fff',
+    fontSize: 16,
+  },
   fullImage: {
     width: '100%',
     height: '100%',
