@@ -11,7 +11,6 @@ import {
   Image,
   PermissionsAndroid,
   Platform,
-  SafeAreaView,
   StatusBar,
   Text,
   TextInput,
@@ -25,6 +24,7 @@ import { PhotoFile } from 'react-native-vision-camera';
 import ImageScroller from './src/components/ImageScroller/ImageScroller';
 import { mockPhotoFiles } from './src/mocks/photofiles';
 import { PhotoFileWithID } from './src/types/PhotoFileWithID';
+import { PhotoFilter } from './src/components/PhotoFilter/PhotoFilter';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -125,6 +125,7 @@ function App() {
   const [customSaying, setCustomSaying] = useState<string>('');
 
   return (
+    // <SafeAreaView>
     <View style={appStyles.container}>
       <Text style={appStyles.title}>Tell us your name:</Text>
       <TextInput
@@ -154,6 +155,7 @@ function App() {
         color="#841584"
         accessibilityLabel="This button launches your phone's camera app"
       />
+      <PhotoFilter photo={takeAPic} />
       {isButtonPressed && (
         <CameraComponent
           passPhoto={handlePassPhotos}
@@ -162,7 +164,7 @@ function App() {
         />
       )}
       {photo && (
-        <SafeAreaView>
+        <>
           <View style={appStyles.imageContainer}>
             <Image
               source={
@@ -193,11 +195,12 @@ function App() {
             color="red"
             accessibilityLabel="This button applies a Magic Flute filter to your photo"
           />
-        </SafeAreaView>
+        </>
       )}
       <ImageScroller images={photos ?? mockPhotoFiles} />
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
     </View>
+    // </SafeAreaView>
   );
 }
 
