@@ -1,18 +1,20 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+const { width, height } = Dimensions.get('window');
 
 export const photoFilterStyles = StyleSheet.create({
+
   container: {
     flex: 1,
-    backgroundColor: 'grey',
+    // backgroundColor: 'grey',
   },
   fullImage: {
-      width: '100%',
-      height: '100%',
+    height: width,
+    width: height,
       resizeMode: 'contain',
   },
   imageContainer: {
-      height: '40%',
-      width: '80%',
+      height: width,
+      width: height,
       backgroundColor: 'blue',
     },
 });
