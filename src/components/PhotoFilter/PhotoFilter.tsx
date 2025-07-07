@@ -4,12 +4,13 @@ import {
   Circle,
   Image,
   useImage,
-  Paint,
-  LinearGradient,
+  ColorMatrix,
 } from '@shopify/react-native-skia';
 import { Dimensions, View } from 'react-native';
 import { PhotoFilterProps } from '../../types/PhotoFilter';
 import { photoFilterStyles } from './PhotoFilter.styles';
+import { BaroqueVignetteOverlay } from './Filters/BaroqueVignetteOverlay';
+import { BaroqueBrushStrokes } from './Filters/BaroqueBrushStrokes';
 
 // function FilteredPhoto({ uri, width, height }) {
 export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
@@ -19,73 +20,59 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
   const height = 256;
   const r = width * 0.33;
 
-  const image1 = useImage(require('../../assets/nickyphillips.png'));
-  // const image3 = useImage({ uri: photo});
+  const image1 = useImage(require('../../assets/MaeveandJo.png'));
   // Loads an image from the network
   // const image2 = useImage("https://picsum.photos/200/300");
 
-  const texture = useImage(require('../../assets/TakeAPicTemp.png')); // texture overlay
-
-  const VignetteOverlay = () => (
-    <Paint blendMode="multiply">
-      <LinearGradient
-        start={{ x: 0, y: 0 }}
-        end={{ x: screenWidth, y: 256 }}
-        colors={['rgba(0,0,0,0.7)', 'transparent', 'rgba(0,0,0,0.7)']}
-      />
-    </Paint>
-  );
-
-  const ColorGradingMatrix = [
-    // R, G, B, A matrix to warm highlights and cool shadows
-    1.1,
-    0.1,
-    0.0,
-    0,
-    0, // Red channel
-    0.05,
-    1.05,
-    0.0,
-    0,
-    0, // Green channel
-    0.0,
-    0.0,
-    0.95,
-    0,
-    0, // Blue channel
-    0,
-    0,
-    0,
-    1,
-    0,
-  ];
-
-  const HighPassFilter = ({ image }) => {
-    // Emulate a simple high-pass filter with contrast boost
-    return (
-      <Group>
-        <Image
-          image={image}
-          fit="contain"
-          x={0}
-          y={0}
-          width={screenWidth}
-          height={256}
-          colorMatrix={ColorGradingMatrix}
-        />
-      </Group>
-    );
-  };
+  const texture = useImage(require('../../assets/baroque.png')); // texture overlay
 
   return (
     <>
       <View style={photoFilterStyles.imageContainer}>
         <Canvas style={photoFilterStyles.fullImage}>
           {/* Baroque-style color graded and sharpened base image */}
-          {image1 && <HighPassFilter image={image1} />}
+          {image1 && (
+            <Group>
+              <Image
+                image={image1}
+                fit="contain"
+                x={0}
+                y={0}
+                width={screenWidth}
+                height={256}
+              >
+                <ColorMatrix
+                  matrix={[
+                    // R, G, B, A matrix to warm highlights and cool shadows
+                    1.1,
+                    0.1,
+                    0.0,
+                    0,
+                    0, // Red channel
+                    0.05,
+                    1.05,
+                    0.0,
+                    0,
+                    0, // Green channel
+                    0.0,
+                    0.0,
+                    0.95,
+                    0,
+                    0, // Blue channel
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                  ]}
+                />
+              </Image>
+            </Group>
+          )}
 
           {/* Vignette overlay for chiaroscuro effect */}
-          <VignetteOverlay />
+          <BaroqueVignetteOverlay />
+          <BaroqueBrushStrokes />
 
           {/* Texture overlay for oil painting effect */}
           {texture && (
