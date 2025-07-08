@@ -8,13 +8,13 @@ export const photoFilterStyles = StyleSheet.create({
     // backgroundColor: 'grey',
   },
   fullImage: {
-    height: width,
-    width: height,
-      resizeMode: 'contain',
+    height: 'auto',
+    width: width * .8,
+    resizeMode: 'cover',
   },
   imageContainer: {
-      height: width,
-      width: height,
+    height: height * .8,
+      width: width * .8,
       backgroundColor: 'blue',
     },
 });
