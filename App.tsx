@@ -11,6 +11,7 @@ import {
   Image,
   PermissionsAndroid,
   Platform,
+  SafeAreaView,
   StatusBar,
   Text,
   TextInput,
@@ -125,8 +126,7 @@ function App() {
   const [customSaying, setCustomSaying] = useState<string>('');
 
   return (
-    // <SafeAreaView>
-    <View style={appStyles.container}>
+    <SafeAreaView style={appStyles.container}>
       <Text style={appStyles.title}>Tell us your name:</Text>
       <TextInput
         style={appStyles.input}
@@ -155,7 +155,9 @@ function App() {
         color="#841584"
         accessibilityLabel="This button launches your phone's camera app"
       />
+
       <PhotoFilter photo={takeAPic} />
+
       {isButtonPressed && (
         <CameraComponent
           passPhoto={handlePassPhotos}
@@ -199,8 +201,7 @@ function App() {
       )}
       <ImageScroller images={photos ?? mockPhotoFiles} />
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-    </View>
-    // </SafeAreaView>
+    </SafeAreaView>
   );
 }
 
