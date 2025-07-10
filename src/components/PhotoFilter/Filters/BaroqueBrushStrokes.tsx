@@ -20,3 +20,11 @@ export const BaroqueBrushStrokes: React.FC<PhotoFilterProps> = ({}) => {
     </Canvas>
   );
 };
+// image={texture}
+//               x={offsetX}
+//               y={offsetY}
+//               width={imageWidth}
+//               height={imageHeight}
+//               opacity={0.25}
+//               blendMode="overlay"
+//               fit="cover"

@@ -155,9 +155,7 @@ function App() {
         color="#841584"
         accessibilityLabel="This button launches your phone's camera app"
       />
-
       <PhotoFilter photo={takeAPic} />
-
       {isButtonPressed && (
         <CameraComponent
           passPhoto={handlePassPhotos}
