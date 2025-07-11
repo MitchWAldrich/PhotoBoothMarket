@@ -38,6 +38,7 @@ const HomeScreen: React.FC = () => {
   const [client, setClient] = useState<string>('');
   const [clientEmail, setClientEmail] = useState<string>('');
   const [isPastAudience, setIsPastAudience] = useState<boolean>(false);
+  const [event, setEvent] = useState<string>('Market Street');
 
   // useEffect(() => {
   //   axios
@@ -68,6 +69,7 @@ const HomeScreen: React.FC = () => {
       .post('http://10.0.2.2:3000/client-info', {
         name: client,
         email: clientEmail,
+        event: event,
         isPastAudience,
       })
       .then(res => {
@@ -89,6 +91,7 @@ const HomeScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={homeScreenStyles.container}>
+      <Text style={homeScreenStyles.title}>{event} Photobooth</Text>
       <Text style={homeScreenStyles.title}>Tell us your name:</Text>
       <TextInput
         style={homeScreenStyles.input}
