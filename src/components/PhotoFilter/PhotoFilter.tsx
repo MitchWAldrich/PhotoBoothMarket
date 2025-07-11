@@ -14,10 +14,19 @@ import {
   useSVG,
   rect,
   fitbox,
+  Skia,
+  SkSVG,
 } from '@shopify/react-native-skia';
-import { Dimensions } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import { PhotoFilterProps } from '../../types/PhotoFilter';
 import { photoFilterStyles } from './PhotoFilter.styles';
+import { useEffect, useState } from 'react';
+import RNFS from 'react-native-fs';
+import cornerSvg from '../../assets/cornerSVG';
+import { SVG_PATHS } from '../../assets/SVG_PATHS';
+import { BaroqueVignetteOverlay } from './Filters/BaroqueVignetteOverlay';
+import { BaroqueBrushStrokes } from './Filters/BaroqueBrushStrokes';
+
 // import { BaroqueVignetteOverlay } from './Filters/BaroqueVignetteOverlay';
 // import { BaroqueBrushStrokes } from './Filters/BaroqueBrushStrokes';
 
@@ -27,7 +36,6 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
   // const width = 256;
   // const height = 256;
   // const r = width * 0.33;
-
   const image1 = useImage(require('../../assets/MaeveandJo.png'));
   // Loads an image from the network
   // const image2 = useImage("https://picsum.photos/200/300");
@@ -60,14 +68,24 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
   const textureWidth = screenWidth * textureScale;
   const textureHeight = (texture.height() / texture.width()) * textureWidth;
 
-  const cornerWidth = 256;
-  const cornerHeight = 256;
-  const cornerSrc = rect(0, 0, frame.width(), frame.height());
-  const cornerDst = rect(0, 0, cornerWidth, cornerHeight);
+  const combinedBR = Skia.Path.Make();
+  SVG_PATHS.forEach(d => {
+    const p = Skia.Path.MakeFromSVGString(d);
+
+    if (p) {
+      const matrix = Skia.Matrix();
+      matrix.translate(230, 604);
+      matrix.scale(0.015, 0.015);
+      // matrix.rotate(240);
+
+      combinedBR.addPath(p, matrix);
+    } else {
+      console.warn('Failed to create path from:', d);
+    }
+  });
 
   return (
     <>
-      {/* // <View style={photoFilterStyles.container}> */}
       <Canvas style={photoFilterStyles.imageContainer}>
         {/* Baroque-style color graded and sharpened base image */}
         {image1 && (
@@ -106,8 +124,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
                 ]}
               />
             </Image>
-            {/* <BaroqueVignetteOverlay />
-            <BaroqueBrushStrokes /> */}
+
             <Image
               image={texture}
               x={offsetX}
@@ -120,23 +137,23 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
             />
 
             {/* Dark base shadow */}
-            {/* <Paint color="#000000" style="fill" /> */}
+            <Paint color="#000000" style="fill" />
 
             {/* Light gradient following the curved shape */}
             <Paint blendMode="multiply">
               {/* Chiaroscuro gradient #1 (left to right) */}
-              {/* <LinearGradient
+              <LinearGradient
                 start={vec(0, 0)}
                 end={vec(imageWidth, 0)}
                 colors={['rgba(0, 0, 0, 0.6)', 'rgba(0, 0, 0, 0.0)']}
-              /> */}
+              />
 
               {/* Chiaroscuro gradient #2 (top to bottom) */}
-              {/* <LinearGradient
+              <LinearGradient
                 start={vec(0, 0)}
                 end={vec(0, imageHeight)}
                 colors={['rgba(0, 0, 0, 0.4)', 'rgba(0, 0, 0, 0.0)']}
-              /> */}
+              />
             </Paint>
             {/* <Shadow dx={15} dy={15} blur={20} color="#3a2a1a" /> */}
 
@@ -151,18 +168,22 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
               <LinearGradient
                 start={vec(20, 20)}
                 end={vec(320, 440)}
-                colors={['#f9d976', '#d6a619', '#b8860b', '#f9d976']}
-                positions={[0, 0.5, 0.8, 1]}
+                colors={['#d4af37', '#b8860b', '#8b7500', '#d4af37']}
+                positions={[0, 0.4, 0.8, 1]}
               />
               <Shadow dx={2} dy={2} blur={6} color="#7a5e00" />
             </Path>
+            <Path
+              path={combinedBR}
+              style="fill"
+              color="#d4af37"
+              strokeWidth={10}
+            />
           </Group>
         )}
-
-        {/* Vignette overlay for chiaroscuro effect */}
-        {/* <BaroqueVignetteOverlay /> */}
-        {/* <BaroqueBrushStrokes /> */}
-
+        {/* <BaroqueVignetteOverlay />
+            <BaroqueBrushStrokes /> */}
+        {/* Probably in the Group? */}
         {/* Texture overlay for oil painting effect */}
         {/* {texture && (
           <Image
@@ -176,11 +197,6 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
             blendMode="overlay"
           />
         )} */}
-        {frame && (
-          <Group transform={fitbox('contain', cornerSrc, cornerDst)}>
-            <ImageSVG svg={frame} />
-          </Group>
-        )}
       </Canvas>
     </>
   );

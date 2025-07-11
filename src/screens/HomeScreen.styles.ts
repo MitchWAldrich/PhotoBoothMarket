@@ -1,0 +1,31 @@
+import { Dimensions, StyleSheet } from 'react-native';
+
+const { width, height } = Dimensions.get('window');
+
+export const homeScreenStyles = StyleSheet.create({
+  buttons: {
+    flexDirection: 'row'
+  },
+  container: {
+    flex: 1,
+    width: width,
+    height: height,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  input: {
+    height: 50,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    backgroundColor: '#fff',
+    fontSize: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#333',
+  },
+});
