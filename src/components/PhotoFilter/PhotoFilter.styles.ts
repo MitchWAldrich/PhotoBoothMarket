@@ -6,15 +6,11 @@ export const photoFilterStyles = StyleSheet.create({
 
   imageContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: height,
-    width: width,
+    width: '100%',
     backgroundColor: 'grey',
   },
   fullImage: {
-    height: height * .8,
-    width: width * .8,
     backgroundColor: 'blue',
+    alignSelf: 'center',
   },
 });
