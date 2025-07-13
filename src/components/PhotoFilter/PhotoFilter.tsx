@@ -9,20 +9,12 @@ import {
   LinearGradient,
   vec,
   Shadow,
-  Rect,
-  ImageSVG,
   useSVG,
-  rect,
-  fitbox,
   Skia,
-  SkSVG,
 } from '@shopify/react-native-skia';
-import { Dimensions, View } from 'react-native';
+import { Dimensions } from 'react-native';
 import { PhotoFilterProps } from '../../types/PhotoFilter';
 import { photoFilterStyles } from './PhotoFilter.styles';
-import { useEffect, useState } from 'react';
-import RNFS from 'react-native-fs';
-import cornerSvg from '../../assets/cornerSVG';
 import { SVG_PATHS } from '../../assets/SVG_PATHS';
 import { BaroqueVignetteOverlay } from './Filters/BaroqueVignetteOverlay';
 import { BaroqueBrushStrokes } from './Filters/BaroqueBrushStrokes';
@@ -53,7 +45,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
 
   // Calculate scale to fit screen
   const scaleX = screenWidth / calculatedWidth;
-  const scaleY = screenHeight / calculatedHeight;
+  const scaleY = (screenHeight * 0.8) / calculatedHeight;
   const scale = Math.min(scaleX, scaleY); // To maintain aspect ratio
 
   const imageWidth = calculatedWidth * scale;
@@ -61,7 +53,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
 
   // Optional: center the image
   const offsetX = (screenWidth - imageWidth) / 2;
-  const offsetY = (screenHeight - imageHeight) / 2;
+  const offsetY = (screenHeight * 0.8 - imageHeight) / 2;
 
   // Size and position of overlay image (e.g., centered, smaller)
   const textureScale = 0.3; // 30% of screen width

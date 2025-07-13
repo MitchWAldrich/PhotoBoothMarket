@@ -7,11 +7,8 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-import ImageScroller from '../components/ImageScroller/ImageScroller';
 import { homeScreenStyles } from './HomeScreen.styles';
 import { useState } from 'react';
-import { PhotoFileWithID } from '../types/PhotoFileWithID';
-import { mockPhotoFiles } from '../mocks/photofiles';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/RootStack';
@@ -79,13 +76,6 @@ const HomeScreen: React.FC = () => {
         console.error('POST error:', err);
       });
   };
-
-  // const [photos, setPhotos] = useState<PhotoFileWithID[]>([]);
-  // const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false);
-
-  // const handleToggleCamera = (openState: boolean) => {
-  //   setIsButtonPressed(openState);
-  // };
 
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -187,10 +177,17 @@ const HomeScreen: React.FC = () => {
       {/* <ImageScroller images={photos ?? mockPhotoFiles} />
        */}
       {/* <ImageScroller images={mockPhotoFiles} /> */}
-      <Button
-        title="Go to the camera"
-        onPress={() => navigation.navigate('Camera')}
-      />
+
+      <View style={homeScreenStyles.bottomButtons}>
+        <Button
+          title="Take a picture"
+          onPress={() => navigation.navigate('Camera')}
+        />
+        <Button
+          title="Go to Album"
+          onPress={() => navigation.navigate('Album')}
+        />
+      </View>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
     </SafeAreaView>
   );

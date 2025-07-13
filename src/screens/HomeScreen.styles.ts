@@ -3,13 +3,18 @@ import { Dimensions, StyleSheet } from 'react-native';
 const { width, height } = Dimensions.get('window');
 
 export const homeScreenStyles = StyleSheet.create({
+  bottomButtons: {
+    height: height * .05,
+   
+    flexDirection: 'row'
+  }, 
   buttons: {
     flexDirection: 'row'
   },
   container: {
     flex: 1,
     width: width,
-    height: height,
+    height: height * .95,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',

@@ -13,6 +13,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import HomeScreen from './src/screens/HomeScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CameraScreen from './src/screens/CameraScreen';
+import AlbumScreen from './src/screens/AlbumScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -107,6 +108,7 @@ function App() {
           options={{ title: 'Welcome' }}
         />
         <Stack.Screen name="Camera" component={CameraScreen} />
+        <Stack.Screen name="Album" component={AlbumScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
