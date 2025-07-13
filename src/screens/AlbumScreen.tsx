@@ -31,7 +31,7 @@ const AlbumScreen: React.FC = () => {
 
   const navigation = useNavigation<AlbumScreenNavigationProp>();
   const route = useRoute<AlbumScreenRouteProp>();
-  const { newPhoto } = route.params;
+  const { newPhoto } = route?.params ?? takeAPic;
 
   const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false);
   const [photo, setPhoto] = useState<PhotoFile>(takeAPic);
