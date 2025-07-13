@@ -3,27 +3,57 @@ import { View, Text, Button, TouchableOpacity } from 'react-native';
 import {
   Camera,
   CameraPermissionRequestResult,
+  PhotoFile,
   useCameraDevice,
 } from 'react-native-vision-camera';
 import { CameraComponentProps } from '../../types/Camera';
 import { cameraStyles } from './Camera.styles';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../types/RootStack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { PhotoFileWithID } from '../../types/PhotoFileWithID';
+
+type CameraScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'Camera'
+>;
+
+const takeAPic: PhotoFile | (() => PhotoFile) = {
+  path: '../assets/TakeAPicTemp.png',
+  width: 1080,
+  height: 1920,
+  isRawPhoto: true,
+  orientation: 'portrait',
+  isMirrored: false,
+};
 
 const CameraComponent: React.FC<CameraComponentProps> = ({
   passPhoto,
   pressed,
   toggleCamera,
 }) => {
+  const navigation = useNavigation<CameraScreenNavigationProp>();
+
   //Likely store this permanently in user profile
   const [cameraPermission, setCameraPermission] =
     useState<CameraPermissionRequestResult>();
   const [microphonePermission, setMicrophonePermission] =
     useState<CameraPermissionRequestResult>();
 
-  const device = useCameraDevice('back');
+  const [photo, setPhoto] = useState<PhotoFile>(takeAPic);
+  const [photos, setPhotos] = useState<PhotoFileWithID[]>([]);
 
+  const device = useCameraDevice('back');
   // if (!hasPermission) return <PermissionsPage />
 
   const camera = useRef<Camera>(null);
+
+  useEffect(() => {
+    navigation.navigate('Album', {
+      newPhoto: photo,
+    });
+    console.log('****logDurPhoto,');
+  }, [navigation, photo]);
 
   useEffect(() => {
     const requestPermissions = async () => {
@@ -39,7 +69,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
 
   if (device == null) return <Text>Loading...</Text>;
   // if (device == null) return <NoCameraErrorView />
-
+  console.log('Current?', camera.current);
   const takePhoto = async () => {
     if (camera.current) {
       try {
@@ -48,6 +78,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
         });
 
         passPhoto(tempPhoto);
+        setPhoto(tempPhoto);
       } catch (error) {
         console.error('Failed to take photo:', error);
       }
@@ -64,22 +95,21 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
       // const data = await result.blob();
     }
   };
-
   if (cameraPermission === 'granted') {
     return (
       <View style={cameraStyles.container}>
-        <Text style={cameraStyles.title}>
+        {/* <Text style={cameraStyles.title}>
           Camera Permission: {cameraPermission}
         </Text>
         <Text style={cameraStyles.title}>
           Microphone Permission: {microphonePermission}
-        </Text>
+        </Text> */}
         <Camera
           ref={camera}
           style={cameraStyles.camera}
           device={device}
-          isActive={pressed}
-          photo={pressed}
+          isActive={true}
+          photo={true}
         />
         <TouchableOpacity
           style={cameraStyles.captureButton}
@@ -89,7 +119,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
         </TouchableOpacity>
         <View style={cameraStyles.button}>
           <Button
-            onPress={() => toggleCamera(false)}
+            onPress={() => navigation.navigate('Album')}
             title="Close Camera"
             color="black"
             accessibilityLabel="This button closes your phone's camera app"
