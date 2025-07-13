@@ -30,7 +30,6 @@ const takeAPic: PhotoFile | (() => PhotoFile) = {
 const CameraComponent: React.FC<CameraComponentProps> = ({
   passPhoto,
   pressed,
-  toggleCamera,
 }) => {
   const navigation = useNavigation<CameraScreenNavigationProp>();
 
@@ -47,13 +46,6 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
   // if (!hasPermission) return <PermissionsPage />
 
   const camera = useRef<Camera>(null);
-
-  useEffect(() => {
-    navigation.navigate('Album', {
-      newPhoto: photo,
-    });
-    console.log('****logDurPhoto,');
-  }, [navigation, photo]);
 
   useEffect(() => {
     const requestPermissions = async () => {
@@ -98,12 +90,6 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
   if (cameraPermission === 'granted') {
     return (
       <View style={cameraStyles.container}>
-        {/* <Text style={cameraStyles.title}>
-          Camera Permission: {cameraPermission}
-        </Text>
-        <Text style={cameraStyles.title}>
-          Microphone Permission: {microphonePermission}
-        </Text> */}
         <Camera
           ref={camera}
           style={cameraStyles.camera}
