@@ -4,6 +4,7 @@ import {
   Button,
   Platform,
   PermissionsAndroid,
+  Image,
 } from 'react-native';
 import { PhotoFilter } from '../components/PhotoFilter/PhotoFilter';
 import ImageScroller from '../components/ImageScroller/ImageScroller';
@@ -31,11 +32,12 @@ const AlbumScreen: React.FC = () => {
 
   const navigation = useNavigation<AlbumScreenNavigationProp>();
   const route = useRoute<AlbumScreenRouteProp>();
-  const { newPhoto } = route.params;
+  const { newPhoto } = route?.params ?? takeAPic;
 
   const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false);
   const [photo, setPhoto] = useState<PhotoFile>(takeAPic);
   const [photos, setPhotos] = useState<PhotoFileWithID[]>([]);
+  const [isFiltered, setIsFiltered] = useState<boolean>(false);
 
   const hasAndroidPermission = async () => {
     const getCheckPermissionPromise = () => {
@@ -108,7 +110,7 @@ const AlbumScreen: React.FC = () => {
   // };
 
   const applyOperaAtelierTwist = () => {
-    // code for Opera Atelier Twist filter
+    setIsFiltered(!isFiltered);
   };
 
   // const applyMagicFluteFilter = () => {
@@ -118,7 +120,22 @@ const AlbumScreen: React.FC = () => {
   return (
     <SafeAreaView style={albumScreenStyles.container}>
       <View style={albumScreenStyles.innerContainer}>
-        <PhotoFilter photo={newPhoto ?? takeAPic} />
+        <View style={albumScreenStyles.imageContainer}>
+          {isFiltered ? (
+            <PhotoFilter photo={newPhoto ?? takeAPic} />
+          ) : (
+            <Image
+              source={
+                photo
+                  ? {
+                      uri: `file://${photo.path}`,
+                    }
+                  : require('../assets/PhotoBooth.png')
+              }
+              style={albumScreenStyles.fullImage}
+            />
+          )}
+        </View>
         {/* {isButtonPressed && (
         <CameraComponent
           passPhoto={handlePassPhotos}
@@ -128,18 +145,6 @@ const AlbumScreen: React.FC = () => {
       )} */}
         {/* {photo && (
         <>
-          <View style={albumScreenStyles.imageContainer}>
-            <Image
-              source={
-                photo
-                  ? {
-                      uri: `file://${photo.path}`,
-                    }
-                  : require('../assets/TakeAPicTemp.png')
-              }
-              style={albumScreenStyles.fullImage}
-            />
-          </View>
           <Button
             onPress={applyMagicFluteFilter}
             title="Magic Flute Filter"

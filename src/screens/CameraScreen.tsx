@@ -17,15 +17,11 @@ const CameraScreen: React.FC = () => {
     isMirrored: false,
   };
 
-  // const navigation = useNavigation<CameraScreenNavigationProp>();
+  const navigation = useNavigation<CameraScreenNavigationProp>();
 
   const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false);
   const [photo, setPhoto] = useState<PhotoFile>(takeAPic);
   const [photos, setPhotos] = useState<PhotoFileWithID[]>([]);
-
-  const handleToggleCamera = (openState: boolean) => {
-    setIsButtonPressed(openState);
-  };
 
   const handlePassPhotos = (photograph: PhotoFile) => {
     setPhoto(photograph);
@@ -36,15 +32,14 @@ const CameraScreen: React.FC = () => {
     };
 
     setPhotos(storedPhotos => [...storedPhotos, newPhotoWithID]);
+    navigation.navigate('Album', {
+      newPhoto: photo,
+    });
   };
 
   return (
     <SafeAreaView style={cameraScreenStyles.container}>
-      <CameraComponent
-        passPhoto={handlePassPhotos}
-        pressed={isButtonPressed}
-        toggleCamera={handleToggleCamera}
-      />
+      <CameraComponent passPhoto={handlePassPhotos} pressed={isButtonPressed} />
     </SafeAreaView>
   );
 };

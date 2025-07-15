@@ -28,7 +28,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
   // const width = 256;
   // const height = 256;
   // const r = width * 0.33;
-  const image1 = useImage(require('../../assets/MaeveandJo.png'));
+  const image1 = useImage(require('../../assets/PhotoBooth.png'));
   // Loads an image from the network
   // const image2 = useImage("https://picsum.photos/200/300");
 

@@ -22,15 +22,6 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
 
-  // const takeAPic: PhotoFile | (() => PhotoFile) = {
-  //   path: '../assets/TakeAPicTemp.png',
-  //   width: 1080,
-  //   height: 1920,
-  //   isRawPhoto: true,
-  //   orientation: 'portrait',
-  //   isMirrored: false,
-  // };
-
   const [postResponse, setPostResponse] = useState('');
   const [client, setClient] = useState<string>('');
   const [clientEmail, setClientEmail] = useState<string>('');
@@ -126,54 +117,7 @@ const HomeScreen: React.FC = () => {
           <Text>{postResponse}</Text>
         </>
       )}
-      {/* <Button
-        onPress={() => handleToggleCamera(true)}
-        title="Open Camera"
-        color="#841584"
-        accessibilityLabel="This button launches your phone's camera app"
-      /> */}
-      {/* <PhotoFilter photo={takeAPic} />
-      {isButtonPressed && (
-        <CameraComponent
-          passPhoto={handlePassPhotos}
-          pressed={isButtonPressed}
-          toggleCamera={handleToggleCamera}
-        />
-      )}
-      {photo && (
-        <>
-          <View style={homeScreenStyles.imageContainer}>
-            <Image
-              source={
-                photo === takeAPic
-                  ? {
-                      uri: `file://${photo.path}`,
-                    }
-                  : require('./src/assets/TakeAPicTemp.png')
-              }
-              style={homeScreenStyles.fullImage}
-            />
-          </View>
-          <Button
-            onPress={savePicture}
-            title="Save Photo"
-            color="teal"
-            accessibilityLabel="This button saves the photo to your camera roll."
-          />
-          <Button
-            onPress={applyOperaAtelierTwist}
-            title="The Opera Atelier Twist"
-            color="gold"
-            accessibilityLabel="This button applies an Opera Atelier style filter to your photo"
-          />
-          <Button
-            onPress={applyMagicFluteFilter}
-            title="Magic Flute Filter"
-            color="red"
-            accessibilityLabel="This button applies a Magic Flute filter to your photo"
-          />
-        </>
-      )} */}
+
       {/* <ImageScroller images={photos ?? mockPhotoFiles} />
        */}
       {/* <ImageScroller images={mockPhotoFiles} /> */}

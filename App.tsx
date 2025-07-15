@@ -9,13 +9,21 @@ import React from 'react';
 import { useColorScheme } from 'react-native';
 import { PhotoFile } from 'react-native-vision-camera';
 import { NavigationContainer } from '@react-navigation/native';
+import 'react-native-gesture-handler';
+import 'react-native-reanimated';
 
 import HomeScreen from './src/screens/HomeScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CameraScreen from './src/screens/CameraScreen';
 import AlbumScreen from './src/screens/AlbumScreen';
+import {
+  BottomTabBar,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
+import { BottomTabs } from './src/components/BottomTabs/BottomTabs';
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 function App() {
   // const isDarkMode = useColorScheme() === 'dark';
@@ -101,17 +109,32 @@ function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{ title: 'Welcome' }}
-        />
-        <Stack.Screen name="Camera" component={CameraScreen} />
-        <Stack.Screen name="Album" component={AlbumScreen} />
-      </Stack.Navigator>
+      <BottomTabs />
     </NavigationContainer>
   );
 }
 
 export default App;
+{
+  /* <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+          tabBarActiveTintColor: '#2f95dc',
+          tabBarInactiveTintColor: 'gray',
+          tabBarLabelStyle: {
+            fontSize: 14,
+            fontWeight: '500',
+          },
+        }}
+      >
+        <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{ title: 'Welcome' }}
+          />
+          <Stack.Screen name="Camera" component={CameraScreen} />
+          <Stack.Screen name="Album" component={AlbumScreen} />
+        </Stack.Navigator>
+      </Tab.Navigator> */
+}
