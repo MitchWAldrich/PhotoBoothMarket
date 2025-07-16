@@ -98,61 +98,28 @@ const AlbumScreen: React.FC = () => {
     setIsButtonPressed(openState);
   };
 
-  // const handlePassPhotos = (photograph: PhotoFile) => {
-  //   setPhoto(photograph);
-
-  //   const newPhotoWithID: PhotoFileWithID = {
-  //     ...photograph,
-  //     id: (photos.length + 1).toString(),
-  //   };
-
-  //   setPhotos(storedPhotos => [...storedPhotos, newPhotoWithID]);
-  // };
-
   const applyOperaAtelierTwist = () => {
     setIsFiltered(!isFiltered);
   };
 
-  // const applyMagicFluteFilter = () => {
-  //   // code for Magic Flute Filters
-  // };
-
   return (
     <SafeAreaView style={albumScreenStyles.container}>
-      <View style={albumScreenStyles.innerContainer}>
-        <View style={albumScreenStyles.imageContainer}>
-          {isFiltered ? (
-            <PhotoFilter photo={newPhoto ?? takeAPic} />
-          ) : (
-            <Image
-              source={
-                photo
-                  ? {
-                      uri: `file://${photo.path}`,
-                    }
-                  : require('../assets/PhotoBooth.png')
-              }
-              style={albumScreenStyles.fullImage}
-            />
-          )}
-        </View>
-        {/* {isButtonPressed && (
-        <CameraComponent
-          passPhoto={handlePassPhotos}
-          pressed={isButtonPressed}
-          toggleCamera={handleToggleCamera}
-        />
-      )} */}
-        {/* {photo && (
-        <>
-          <Button
-            onPress={applyMagicFluteFilter}
-            title="Magic Flute Filter"
-            color="red"
-            accessibilityLabel="This button applies a Magic Flute filter to your photo"
+      <View style={albumScreenStyles.imageContainer}>
+        {isFiltered ? (
+          <PhotoFilter photo={newPhoto ?? takeAPic} />
+        ) : (
+          <Image
+            source={
+              !photo
+                ? {
+                    uri: `file://${photo.path}`,
+                  }
+                : require('../assets/PhotoBooth.png')
+            }
+            style={albumScreenStyles.fullImage}
+            resizeMode="cover"
           />
-        </>
-      )} */}
+        )}
       </View>
       <View style={albumScreenStyles.bottomButtons}>
         <Button
@@ -167,17 +134,28 @@ const AlbumScreen: React.FC = () => {
           color="teal"
           accessibilityLabel="This button saves the photo to your camera roll."
         />
-        <ImageScroller images={photos ?? mockPhotoFiles} />
-        <View style={albumScreenStyles.bottomButtons}>
-          <Button
-            title="Take another picture"
-            onPress={() => navigation.navigate('Camera')}
-          />
-          <Button title="Go Home" onPress={() => navigation.navigate('Home')} />
-        </View>
+        <Button
+          title="Take another picture"
+          onPress={() => navigation.navigate('Camera')}
+        />
       </View>
     </SafeAreaView>
   );
 };
 
 export default AlbumScreen;
+
+// const handlePassPhotos = (photograph: PhotoFile) => {
+//   setPhoto(photograph);
+
+//   const newPhotoWithID: PhotoFileWithID = {
+//     ...photograph,
+//     id: (photos.length + 1).toString(),
+//   };
+
+//   setPhotos(storedPhotos => [...storedPhotos, newPhotoWithID]);
+// };
+
+// const applyMagicFluteFilter = () => {
+//   // code for Magic Flute Filters
+// };

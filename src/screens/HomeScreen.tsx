@@ -122,16 +122,7 @@ const HomeScreen: React.FC = () => {
        */}
       {/* <ImageScroller images={mockPhotoFiles} /> */}
 
-      <View style={homeScreenStyles.bottomButtons}>
-        <Button
-          title="Take a picture"
-          onPress={() => navigation.navigate('Camera')}
-        />
-        <Button
-          title="Go to Album"
-          onPress={() => navigation.navigate('Album')}
-        />
-      </View>
+      <View style={homeScreenStyles.bottomButtons} />
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
     </SafeAreaView>
   );
