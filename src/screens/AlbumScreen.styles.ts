@@ -4,43 +4,45 @@ const { width, height } = Dimensions.get('window');
 
 export const albumScreenStyles = StyleSheet.create({
   bottomButtons: {
-    height: height * .2
+    flex: 2,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    padding: 10,
   }, 
-  buttons: {
-    flexDirection: 'row'
-  },
+  // buttons: {
+  //   flexDirection: 'row'
+  // },
   container: {
     flex: 1,
-    width: width,
-    height: height,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    // width: width,
+    // height: height,
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    // backgroundColor: '#fff',
   },
-  innerContainer: {
-      flex: 1,
-      width: width,
-      height: height * .8,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#fff',
-    },
+  // innerContainer: {
+  //     flex: 8,
+  //     width: width,
+  //     height: height * .8,
+  //     justifyContent: 'center',
+  //     alignItems: 'center',
+  //     backgroundColor: '#fff',
+  //   },
   imageContainer: {
-    height: 80,
-    width: 100,
+    flex: 8,
     backgroundColor: 'blue',
   },
-  imageThumbnail: {
-    width: 100,
-    height: 100,
-    borderRadius: 8,
-    margin: 5,
-    resizeMode: 'cover',
-  },
+  // imageThumbnail: {
+  //   width: 100,
+  //   height: 100,
+  //   borderRadius: 8,
+  //   margin: 5,
+  //   resizeMode: 'cover',
+  // },
   fullImage: {
     width: '100%',
     height: '100%',
-    resizeMode: 'contain',
+    // resizeMode: 'contain',
   },
   title: {
     fontSize: 24,
