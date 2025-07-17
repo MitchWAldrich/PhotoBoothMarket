@@ -19,6 +19,7 @@ import {
   AlbumScreenNavigationProp,
   AlbumScreenRouteProp,
 } from '../types/RootStack';
+import AtelierTwist from '../components/BaroqueFilter/BaroqueFilter';
 
 const AlbumScreen: React.FC = () => {
   const takeAPic: PhotoFile | (() => PhotoFile) = {
@@ -106,8 +107,9 @@ const AlbumScreen: React.FC = () => {
     <SafeAreaView style={albumScreenStyles.container}>
       <View style={albumScreenStyles.imageContainer}>
         {isFiltered ? (
-          <PhotoFilter photo={newPhoto ?? takeAPic} />
+          <AtelierTwist />
         ) : (
+          // <PhotoFilter photo={newPhoto ?? takeAPic} />
           <Image
             source={
               !photo
