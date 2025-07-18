@@ -5,12 +5,12 @@
  * @format
  */
 
+import 'react-native-reanimated';
 import React from 'react';
 import { useColorScheme } from 'react-native';
 import { PhotoFile } from 'react-native-vision-camera';
 import { NavigationContainer } from '@react-navigation/native';
 import 'react-native-gesture-handler';
-import 'react-native-reanimated';
 
 import HomeScreen from './src/screens/HomeScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -22,8 +22,8 @@ import {
 } from '@react-navigation/bottom-tabs';
 import { BottomTabs } from './src/components/BottomTabs/BottomTabs';
 
-const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
+// const Stack = createNativeStackNavigator();
+// const Tab = createBottomTabNavigator();
 
 function App() {
   // const isDarkMode = useColorScheme() === 'dark';
