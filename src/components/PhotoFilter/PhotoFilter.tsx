@@ -25,9 +25,7 @@ import { BaroqueBrushStrokes } from './Filters/BaroqueBrushStrokes';
 // function FilteredPhoto({ uri, width, height }) {
 export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-  // const width = 256;
-  // const height = 256;
-  // const r = width * 0.33;
+
   const image1 = useImage(require('../../assets/PhotoBooth.png'));
   // Loads an image from the network
   // const image2 = useImage("https://picsum.photos/200/300");
