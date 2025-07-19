@@ -16,8 +16,8 @@ import { Dimensions } from 'react-native';
 import { PhotoFilterProps } from '../../types/PhotoFilter';
 import { photoFilterStyles } from './PhotoFilter.styles';
 import { SVG_PATHS } from '../../assets/SVG_PATHS';
-import { BaroqueVignetteOverlay } from './Filters/BaroqueVignetteOverlay';
-import { BaroqueBrushStrokes } from './Filters/BaroqueBrushStrokes';
+// import { BaroqueVignetteOverlay } from './Filters/BaroqueVignetteOverlay';
+// import { BaroqueBrushStrokes } from './Filters/BaroqueBrushStrokes';
 
 // import { BaroqueVignetteOverlay } from './Filters/BaroqueVignetteOverlay';
 // import { BaroqueBrushStrokes } from './Filters/BaroqueBrushStrokes';
@@ -25,6 +25,9 @@ import { BaroqueBrushStrokes } from './Filters/BaroqueBrushStrokes';
 // function FilteredPhoto({ uri, width, height }) {
 export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+
+  const temp = photo;
+  console.log('temp', temp);
 
   const image1 = useImage(require('../../assets/PhotoBooth.png'));
   // Loads an image from the network
@@ -57,6 +60,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
   const textureScale = 0.3; // 30% of screen width
   const textureWidth = screenWidth * textureScale;
   const textureHeight = (texture.height() / texture.width()) * textureWidth;
+  console.log('textureH', textureHeight);
 
   const combinedBR = Skia.Path.Make();
   SVG_PATHS.forEach(d => {
