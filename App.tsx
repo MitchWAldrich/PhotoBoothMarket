@@ -5,12 +5,10 @@
  * @format
  */
 
-import 'react-native-reanimated';
 import React from 'react';
 import { useColorScheme } from 'react-native';
 import { PhotoFile } from 'react-native-vision-camera';
 import { NavigationContainer } from '@react-navigation/native';
-import 'react-native-gesture-handler';
 
 import HomeScreen from './src/screens/HomeScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
