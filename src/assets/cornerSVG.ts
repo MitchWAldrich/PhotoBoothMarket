@@ -9,7 +9,7 @@ const cornerSvg = `
 Created by potrace 1.15, written by Peter Selinger 2001-2017
 </metadata>
 <g transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)"
-fill="#000000" stroke="none">
+fill="#d4af37" stroke="none">
 <path d="M200 12490 l0 -50 6150 0 6150 0 0 -4560 0 -4560 50 0 50 0 0 4610 0
 4610 -6200 0 -6200 0 0 -50z"/>
 <path d="M7455 12374 c-11 -3 -40 -13 -65 -22 -42 -16 -294 -17 -3612 -22
