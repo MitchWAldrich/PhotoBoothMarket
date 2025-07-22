@@ -1,5 +1,5 @@
 const fs = require('fs');
-const svg = fs.readFileSync('../assets/cornerSVG.ts'
+const svg = fs.readFileSync('../src/assets/cornerSVG.ts'
 , 'utf-8');
 const ds = Array.from(svg.matchAll(/<path\s+d="([^"]+)"/g), m => m[1]);
 const out = 'export const SVG_PATHS = [\n' +
