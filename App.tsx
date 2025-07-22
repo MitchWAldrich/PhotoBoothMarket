@@ -5,6 +5,7 @@
  * @format
  */
 
+import 'react-native-reanimated';
 import React from 'react';
 import { useColorScheme } from 'react-native';
 import { PhotoFile } from 'react-native-vision-camera';
