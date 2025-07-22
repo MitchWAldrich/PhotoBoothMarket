@@ -1,26 +1,20 @@
 import React from 'react';
-import {
-  Canvas,
-  Group,
-  Image,
-  Path,
-  Skia,
-  useImage,
-} from '@shopify/react-native-skia';
+import { Canvas, Group, Image, useImage } from '@shopify/react-native-skia';
 import { Dimensions } from 'react-native';
 
 const AtelierTwist: React.FC = () => {
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
-  const pathString = `M10,0
-  C5,5,5,15,0,20
-  C8,18,12,12,20,10
-  C15,12,12,18,10,20`;
-  const path = Skia.Path.MakeFromSVGString(pathString);
+  // const pathString = `M10,0
+  // C5,5,5,15,0,20
+  // C8,18,12,12,20,10
+  // C15,12,12,18,10,20`;
+  // const path = Skia.Path.MakeFromSVGString(pathString);
 
   const image1 = useImage(require('../../assets/PhotoBooth.png'));
 
-  if (!image1 || !path) return null;
+  // if (!image1 || !path) return null;
+  if (!image1) return null;
 
   const calculatedWidth = image1.width();
   const calculatedHeight = image1.height();
@@ -44,17 +38,17 @@ const AtelierTwist: React.FC = () => {
           width={imageWidth}
           height={imageHeight}
         />
+        {/* <Path
+          path={path}
+          color="gold"
+          style="stroke"
+          strokeWidth={4}
+          start={0}
+          end={0}
+          strokeJoin="round"
+          strokeCap="round"
+        /> */}
       </Group>
-      <Path
-        path={path}
-        color="gold"
-        style="stroke"
-        strokeWidth={4}
-        start={0}
-        end={0}
-        strokeJoin="round"
-        strokeCap="round"
-      />
     </Canvas>
   );
 };
