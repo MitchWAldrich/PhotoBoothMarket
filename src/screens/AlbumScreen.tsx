@@ -107,7 +107,8 @@ const AlbumScreen: React.FC = () => {
     <SafeAreaView style={albumScreenStyles.container}>
       <View style={albumScreenStyles.imageContainer}>
         {!isFiltered ? (
-          <AtelierTwist />
+          // <AtelierTwist />
+          <PhotoFilter photo={newPhoto ?? takeAPic} />
         ) : (
           // <PhotoFilter photo={newPhoto ?? takeAPic} />
           <Image
