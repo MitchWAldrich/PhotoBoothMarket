@@ -11,6 +11,9 @@ import {
   Shadow,
   useSVG,
   Skia,
+  ImageSVG,
+  fitbox,
+  rect,
 } from '@shopify/react-native-skia';
 import { Dimensions } from 'react-native';
 import { PhotoFilterProps } from '../../types/PhotoFilter';
@@ -63,20 +66,54 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
   console.log('textureH', textureHeight);
 
   const combinedBR = Skia.Path.Make();
+
   SVG_PATHS.forEach(d => {
     const p = Skia.Path.MakeFromSVGString(d);
-
     if (p) {
+      console.log('d - yes', d);
       const matrix = Skia.Matrix();
-      matrix.translate(230, 604);
-      matrix.scale(0.015, 0.015);
-      // matrix.rotate(240);
+
+      // Apply transformations
+      // matrix.postScale(0.015, 0.015);
+      // matrix.postRotate(240); // rotates around origin
+      // matrix.postTranslate(0, 0);
 
       combinedBR.addPath(p, matrix);
     } else {
       console.warn('Failed to create path from:', d);
     }
   });
+
+  const wavyRectangle = `
+       M 10 50
+      C 20 20, 30 80, 40 50
+      C 50 20, 60 80, 70 50
+      C 80 20, 90 80, 100 50
+      C 110 20, 120 80, 110 50
+      V 220
+      H 10
+      Z
+    `;
+
+  // const framePath = `M0 ${
+  //   (screenHeight * 0.8 - imageHeight) / 2
+  // } H${screenWidth} V${
+  //   screenHeight * 0.8 - (screenHeight * 0.8 - imageHeight) / 2
+  // } H0 Z`;
+
+  const framePath = `
+  M 0 100
+  C 60 85, 130 105, 200 100
+  C 260 85, 340 105, 400 100
+  H 400
+  V 630
+  H0 
+  Z`;
+
+  const cornerWidth = 256;
+  const cornerHeight = 256;
+  const cornerSrc = rect(0, 0, frame.width(), frame.height());
+  const cornerDst = rect(0, 0, cornerWidth, cornerHeight);
 
   return (
     <>
@@ -118,7 +155,6 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
                 ]}
               />
             </Image>
-
             <Image
               image={texture}
               x={offsetX}
@@ -129,10 +165,8 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
               blendMode="overlay"
               fit="cover"
             />
-
             {/* Dark base shadow */}
             <Paint color="#000000" style="fill" />
-
             {/* Light gradient following the curved shape */}
             <Paint blendMode="multiply">
               {/* Chiaroscuro gradient #1 (left to right) */}
@@ -150,15 +184,8 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
               />
             </Paint>
             {/* <Shadow dx={15} dy={15} blur={20} color="#3a2a1a" /> */}
-
             {/* Main frame rectangle */}
-            <Path
-              path={`M0 ${(screenHeight - imageHeight) / 2} H${screenWidth} V${
-                screenHeight - (screenHeight - imageHeight) / 2
-              } H0 Z`}
-              strokeWidth={20}
-              style="stroke"
-            >
+            <Path path={framePath} strokeWidth={20} style="stroke">
               <LinearGradient
                 start={vec(20, 20)}
                 end={vec(320, 440)}
@@ -167,12 +194,17 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
               />
               <Shadow dx={2} dy={2} blur={6} color="#7a5e00" />
             </Path>
-            <Path
-              path={combinedBR}
-              style="fill"
-              color="#d4af37"
-              strokeWidth={10}
-            />
+            {/* {frame && (
+              <Path path={wavyRectangle} strokeWidth={20} style="stroke">
+                <LinearGradient
+                  start={vec(20, 20)}
+                  end={vec(320, 440)}
+                  colors={['#d4af37', '#b8860b', '#8b7500', '#d4af37']}
+                  positions={[0, 0.4, 0.8, 1]}
+                />
+                <Shadow dx={2} dy={2} blur={6} color="#7a5e00" />
+              </Path>
+            )} */}
           </Group>
         )}
         {/* <BaroqueVignetteOverlay />
