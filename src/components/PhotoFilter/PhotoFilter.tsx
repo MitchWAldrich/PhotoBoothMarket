@@ -103,11 +103,18 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
 
   const framePath = `
   M 0 100
-  C 60 85, 130 105, 200 100
-  C 260 85, 340 105, 400 100
+  C 23 90, 47 90, 70 100
+  C 78 110, 87 110, 95 100 
+  C 117 115, 133 110, 155 100
+  C 163 110, 172 110, 180 100 
+  C 193 90, 207 90, 220 100
+  C 228 110, 237 110, 245 100
+  C 267 110, 283 110, 305 100
+  C 313 110, 322 110, 330 100
+  C 353 90, 377 90, 400 100
   H 400
   V 630
-  H0 
+  H 0 
   Z`;
 
   const cornerWidth = 256;
@@ -185,7 +192,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
             </Paint>
             {/* <Shadow dx={15} dy={15} blur={20} color="#3a2a1a" /> */}
             {/* Main frame rectangle */}
-            <Path path={framePath} strokeWidth={20} style="stroke">
+            <Path path={framePath} strokeWidth={8} style="stroke">
               <LinearGradient
                 start={vec(20, 20)}
                 end={vec(320, 440)}
