@@ -101,29 +101,63 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
   //   screenHeight * 0.8 - (screenHeight * 0.8 - imageHeight) / 2
   // } H0 Z`;
 
-  const framePath = `
- M 0 100
-  C 23 90, 47 90, 70 100
-  C 78 110, 87 110, 95 100 
-  C 117 115, 133 110, 155 100
-  C 163 110, 172 110, 180 100 
-  C 193 90, 207 90, 220 100
-  C 228 110, 237 110, 245 100
-  C 267 110, 283 110, 305 100
-  C 313 110, 322 110, 330 100
-  C 353 90, 377 90, 400 100
-  
-  V 630
+  const firstPercent = 0.3;
+  const secondPercent = 0.7;
 
-  C 377 640, 353 640, 330 630
-  C 322 620, 313 620, 305 630
-C 267 620, 283 620, 245 630
-C 228 620, 237 620, 220 630
-C 193 620, 207 620, 180 630
-C 163 620, 172 620, 155 630
-C 117 620, 133 620, 95 630
-C 78 620, 87 620, 70 630
-C 23 640, 47 640, 0 630
+  const frameWidthNum = 400;
+  const frameHeightNum = 630;
+  const frameWidth = `400`;
+  const frameHeight = `630`;
+
+  const topFrameCoord = `100`;
+  const bottomFrameCoord = `630`;
+  const upperTopCurveCoord = `90`;
+  const lowerTopCurveCoord = `110`;
+
+  const outerRightCurveCoord = `410`;
+  const innerRightCurveCoord = `390`;
+
+  const cornerCurve = 0.175;
+
+  const cornerLengthHorizontal = frameWidthNum * cornerCurve;
+  const cornerLengthVertical = 100 + frameHeightNum * cornerCurve;
+
+  const framePath = `
+ M 0 ${topFrameCoord}
+  C ${cornerLengthHorizontal * firstPercent} ${upperTopCurveCoord}, ${(
+    cornerLengthHorizontal * secondPercent
+  ).toString()} ${upperTopCurveCoord}, ${cornerLengthHorizontal.toString()} ${topFrameCoord}
+  C 78 ${lowerTopCurveCoord}, 87 ${lowerTopCurveCoord}, 95 ${topFrameCoord} 
+  C 117 ${lowerTopCurveCoord}, 133 ${lowerTopCurveCoord}, 155 ${topFrameCoord}
+  C 163 ${lowerTopCurveCoord}, 172 ${lowerTopCurveCoord}, 180 ${topFrameCoord} 
+  C 193 ${upperTopCurveCoord}, 207 ${upperTopCurveCoord}, 220 ${topFrameCoord}
+  C 228 ${lowerTopCurveCoord}, 237 ${lowerTopCurveCoord}, 245 ${topFrameCoord}
+  C 267 ${lowerTopCurveCoord}, 283 ${lowerTopCurveCoord}, 305 ${topFrameCoord}
+  C 313 ${lowerTopCurveCoord}, 322 ${lowerTopCurveCoord}, ${(
+    frameWidthNum *
+    ((100 - cornerCurve * 100) / 100)
+  ).toString()}  ${topFrameCoord}
+  C 353 ${upperTopCurveCoord}, 377 ${upperTopCurveCoord}, ${frameWidth} ${topFrameCoord}
+  
+  C ${outerRightCurveCoord} ${(
+    cornerLengthVertical * firstPercent
+  ).toString()}, ${outerRightCurveCoord} ${(
+    cornerLengthVertical * secondPercent
+  ).toString()}, ${frameWidth} ${cornerLengthVertical.toString()}
+
+  V ${frameHeight}
+
+  
+  C 322 620, 313 620, 305 ${bottomFrameCoord}
+  C 267 620, 283 620, 245 ${bottomFrameCoord}
+  C 228 620, 237 620, 220 ${bottomFrameCoord}
+  C 193 620, 207 620, 180 ${bottomFrameCoord}
+  C 163 620, 172 620, 155 ${bottomFrameCoord}
+  C 117 620, 133 620, 95 ${bottomFrameCoord}
+  C 78 620, 87 620, ${(
+    frameWidthNum * cornerCurve
+  ).toString()} ${bottomFrameCoord}
+  C 23 640, 47 640, 0 ${bottomFrameCoord}
 
   H 0 
   Z`;
@@ -245,3 +279,8 @@ C 23 640, 47 640, 0 630
     </>
   );
 };
+
+// C 377 640, 353 640, ${(
+//   frameWidthNum *
+//   ((100 - cornerCurve * 100) / 100)
+// ).toString()} ${bottomFrameCoord}
