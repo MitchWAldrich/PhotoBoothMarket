@@ -118,16 +118,26 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
   const innerRightCurveCoord = `390`;
 
   const cornerCurve = 0.175;
+  const smallCurve = 0.0625;
 
   const cornerLengthHorizontal = frameWidthNum * cornerCurve;
-  const cornerLengthVertical = 100 + frameHeightNum * cornerCurve;
+  const cornerLengthVertical = frameHeightNum * cornerCurve;
 
   const framePath = `
  M 0 ${topFrameCoord}
   C ${cornerLengthHorizontal * firstPercent} ${upperTopCurveCoord}, ${(
     cornerLengthHorizontal * secondPercent
   ).toString()} ${upperTopCurveCoord}, ${cornerLengthHorizontal.toString()} ${topFrameCoord}
-  C 78 ${lowerTopCurveCoord}, 87 ${lowerTopCurveCoord}, 95 ${topFrameCoord} 
+  C ${(
+    cornerLengthHorizontal +
+    frameWidthNum * smallCurve * secondPercent
+  ).toString()} ${lowerTopCurveCoord}, ${(
+    cornerLengthHorizontal +
+    frameWidthNum * smallCurve * firstPercent
+  ).toString()} ${lowerTopCurveCoord}, ${(
+    cornerLengthHorizontal +
+    frameWidthNum * smallCurve
+  ).toString()} ${topFrameCoord} 
   C 117 ${lowerTopCurveCoord}, 133 ${lowerTopCurveCoord}, 155 ${topFrameCoord}
   C 163 ${lowerTopCurveCoord}, 172 ${lowerTopCurveCoord}, 180 ${topFrameCoord} 
   C 193 ${upperTopCurveCoord}, 207 ${upperTopCurveCoord}, 220 ${topFrameCoord}
@@ -140,15 +150,31 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
   C 353 ${upperTopCurveCoord}, 377 ${upperTopCurveCoord}, ${frameWidth} ${topFrameCoord}
   
   C ${outerRightCurveCoord} ${(
+    100 +
     cornerLengthVertical * firstPercent
   ).toString()}, ${outerRightCurveCoord} ${(
+    100 +
     cornerLengthVertical * secondPercent
-  ).toString()}, ${frameWidth} ${cornerLengthVertical.toString()}
+  ).toString()}, ${frameWidth} ${(100 + cornerLengthVertical).toString()}
+  C ${innerRightCurveCoord} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve * secondPercent
+  ).toString()}, ${innerRightCurveCoord} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve * firstPercent
+  ).toString()}, ${frameWidth} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve
+  ).toString()}
+  
 
   V ${frameHeight}
 
   
-  C 322 620, 313 620, 305 ${bottomFrameCoord}
+  C 322 640, 313 640, 305 ${bottomFrameCoord}
   C 267 620, 283 620, 245 ${bottomFrameCoord}
   C 228 620, 237 620, 220 ${bottomFrameCoord}
   C 193 620, 207 620, 180 ${bottomFrameCoord}
