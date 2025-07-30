@@ -119,6 +119,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
 
   const cornerCurve = 0.175;
   const smallCurve = 0.0625;
+  const mediumCurve = 0.15;
 
   const cornerLengthHorizontal = frameWidthNum * cornerCurve;
   const cornerLengthVertical = frameHeightNum * cornerCurve;
@@ -138,7 +139,11 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     cornerLengthHorizontal +
     frameWidthNum * smallCurve
   ).toString()} ${topFrameCoord} 
-  C 117 ${lowerTopCurveCoord}, 133 ${lowerTopCurveCoord}, 155 ${topFrameCoord}
+  C 117 ${lowerTopCurveCoord}, 133 ${lowerTopCurveCoord}, ${(
+    cornerLengthHorizontal +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve
+  ).toString()}  ${topFrameCoord}
   C 163 ${lowerTopCurveCoord}, 172 ${lowerTopCurveCoord}, 180 ${topFrameCoord} 
   C 193 ${upperTopCurveCoord}, 207 ${upperTopCurveCoord}, 220 ${topFrameCoord}
   C 228 ${lowerTopCurveCoord}, 237 ${lowerTopCurveCoord}, 245 ${topFrameCoord}
@@ -169,7 +174,20 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     cornerLengthVertical +
     frameHeightNum * smallCurve
   ).toString()}
-  
+  C ${innerRightCurveCoord} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve * secondPercent
+  ).toString()}, ${innerRightCurveCoord} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve * firstPercent
+  ).toString()}, ${frameWidth} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve
+  ).toString()}
 
   V ${frameHeight}
 
