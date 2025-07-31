@@ -114,45 +114,191 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
   const upperTopCurveCoord = `90`;
   const lowerTopCurveCoord = `110`;
 
-  const outerRightCurveCoord = `410`;
-  const innerRightCurveCoord = `390`;
+  const cornerCurve = 0.165;
+  const smallCurve = 0.0525;
+  const mediumCurve = 0.14;
+  const middleCurve = 0.09;
 
-  const cornerCurve = 0.175;
-  const smallCurve = 0.0625;
-  const mediumCurve = 0.15;
+  const fullFrameWidth =
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * cornerCurve;
+
+  const outerRightCurveCoord = `${(fullFrameWidth + 10).toString()}`;
+  const innerRightCurveCoord = `${(fullFrameWidth - 10).toString()}`;
 
   const cornerLengthHorizontal = frameWidthNum * cornerCurve;
   const cornerLengthVertical = frameHeightNum * cornerCurve;
 
   const framePath = `
  M 0 ${topFrameCoord}
-  C ${cornerLengthHorizontal * firstPercent} ${upperTopCurveCoord}, ${(
-    cornerLengthHorizontal * secondPercent
-  ).toString()} ${upperTopCurveCoord}, ${cornerLengthHorizontal.toString()} ${topFrameCoord}
+  C ${frameWidthNum * cornerCurve * firstPercent} ${upperTopCurveCoord}, ${(
+    frameWidthNum *
+    cornerCurve *
+    secondPercent
+  ).toString()} ${upperTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve
+  ).toString()} ${topFrameCoord}
   C ${(
-    cornerLengthHorizontal +
+    frameWidthNum * cornerCurve +
     frameWidthNum * smallCurve * secondPercent
   ).toString()} ${lowerTopCurveCoord}, ${(
-    cornerLengthHorizontal +
+    frameWidthNum * cornerCurve +
     frameWidthNum * smallCurve * firstPercent
   ).toString()} ${lowerTopCurveCoord}, ${(
-    cornerLengthHorizontal +
+    frameWidthNum * cornerCurve +
     frameWidthNum * smallCurve
   ).toString()} ${topFrameCoord} 
-  C 117 ${lowerTopCurveCoord}, 133 ${lowerTopCurveCoord}, ${(
-    cornerLengthHorizontal +
+  C ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve * firstPercent
+  ).toString()} ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve * secondPercent
+  ).toString()} ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
     frameWidthNum * smallCurve +
     frameWidthNum * mediumCurve
   ).toString()}  ${topFrameCoord}
-  C 163 ${lowerTopCurveCoord}, 172 ${lowerTopCurveCoord}, 180 ${topFrameCoord} 
-  C 193 ${upperTopCurveCoord}, 207 ${upperTopCurveCoord}, 220 ${topFrameCoord}
-  C 228 ${lowerTopCurveCoord}, 237 ${lowerTopCurveCoord}, 245 ${topFrameCoord}
-  C 267 ${lowerTopCurveCoord}, 283 ${lowerTopCurveCoord}, 305 ${topFrameCoord}
-  C 313 ${lowerTopCurveCoord}, 322 ${lowerTopCurveCoord}, ${(
-    frameWidthNum *
-    ((100 - cornerCurve * 100) / 100)
+  C ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve * firstPercent
+  ).toString()}  ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve * secondPercent
+  ).toString()}  ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve
+  ).toString()}  ${topFrameCoord} 
+  C ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve * firstPercent
+  ).toString()} ${upperTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve * secondPercent
+  ).toString()} ${upperTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve
   ).toString()}  ${topFrameCoord}
-  C 353 ${upperTopCurveCoord}, 377 ${upperTopCurveCoord}, ${frameWidth} ${topFrameCoord}
+  C ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve * firstPercent
+  ).toString()} ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve * secondPercent
+  ).toString()} ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve
+  ).toString()} ${topFrameCoord}
+  C ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve * firstPercent
+  ).toString()}  ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve * secondPercent
+  ).toString()}  ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve
+  ).toString()}  ${topFrameCoord}
+  C ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve * firstPercent
+  ).toString()}  ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve * secondPercent
+  ).toString()}  ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve
+  ).toString()}  ${topFrameCoord}
+  C ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * cornerCurve * firstPercent
+  ).toString()} ${upperTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * cornerCurve * secondPercent
+  ).toString()} ${upperTopCurveCoord}, ${fullFrameWidth.toString()} ${topFrameCoord}
   
   C ${outerRightCurveCoord} ${(
     100 +
@@ -160,19 +306,8 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
   ).toString()}, ${outerRightCurveCoord} ${(
     100 +
     cornerLengthVertical * secondPercent
-  ).toString()}, ${frameWidth} ${(100 + cornerLengthVertical).toString()}
-  C ${innerRightCurveCoord} ${(
-    100 +
-    cornerLengthVertical +
-    frameHeightNum * smallCurve * secondPercent
-  ).toString()}, ${innerRightCurveCoord} ${(
-    100 +
-    cornerLengthVertical +
-    frameHeightNum * smallCurve * firstPercent
-  ).toString()}, ${frameWidth} ${(
-    100 +
-    cornerLengthVertical +
-    frameHeightNum * smallCurve
+  ).toString()}, ${fullFrameWidth.toString()} ${(
+    100 + cornerLengthVertical
   ).toString()}
   C ${innerRightCurveCoord} ${(
     100 +
@@ -182,11 +317,185 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     100 +
     cornerLengthVertical +
     frameHeightNum * smallCurve * firstPercent
-  ).toString()}, ${frameWidth} ${(
+  ).toString()}, ${fullFrameWidth.toString()} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve
+  ).toString()}
+  C ${innerRightCurveCoord} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve * firstPercent
+  ).toString()}, ${innerRightCurveCoord} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve * secondPercent
+  ).toString()}, ${fullFrameWidth.toString()} ${(
     100 +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve
+  ).toString()}
+  C ${innerRightCurveCoord} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve * firstPercent
+  ).toString()},  ${innerRightCurveCoord} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve * secondPercent
+  ).toString()}, ${fullFrameWidth.toString()} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve
+  ).toString()}
+  C ${outerRightCurveCoord} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve * firstPercent
+  ).toString()}, ${outerRightCurveCoord} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve * secondPercent
+  ).toString()}, ${fullFrameWidth.toString()} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve
+  ).toString()}
+  C ${innerRightCurveCoord} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve * firstPercent
+  ).toString()}, ${innerRightCurveCoord} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve * secondPercent
+  ).toString()}, ${fullFrameWidth.toString()} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve
+  ).toString()}
+  C ${innerRightCurveCoord}  ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve * firstPercent
+  ).toString()}, ${innerRightCurveCoord} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve * secondPercent
+  ).toString()}, ${fullFrameWidth.toString()} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve
+  ).toString()}
+   C ${innerRightCurveCoord} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve * firstPercent
+  ).toString()}, ${innerRightCurveCoord} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve * secondPercent
+  ).toString()}, ${fullFrameWidth.toString()} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve
+  ).toString()}
+  C ${outerRightCurveCoord} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * cornerCurve * firstPercent
+  ).toString()}, ${outerRightCurveCoord} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * cornerCurve * secondPercent
+  ).toString()}, ${fullFrameWidth.toString()} ${(
+    100 +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * cornerCurve
   ).toString()}
 
   V ${frameHeight}
