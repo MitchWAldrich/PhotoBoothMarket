@@ -4,7 +4,7 @@ import {
   Button,
   Platform,
   PermissionsAndroid,
-  Image,
+  Dimensions,
 } from 'react-native';
 import { PhotoFilter } from '../components/PhotoFilter/PhotoFilter';
 import ImageScroller from '../components/ImageScroller/ImageScroller';
@@ -20,6 +20,7 @@ import {
   AlbumScreenRouteProp,
 } from '../types/RootStack';
 import AtelierTwist from '../components/BaroqueFilter/BaroqueFilter';
+import { Canvas, Image, useImage } from '@shopify/react-native-skia';
 
 const AlbumScreen: React.FC = () => {
   const takeAPic: PhotoFile | (() => PhotoFile) = {
@@ -34,6 +35,8 @@ const AlbumScreen: React.FC = () => {
   const navigation = useNavigation<AlbumScreenNavigationProp>();
   const route = useRoute<AlbumScreenRouteProp>();
   const { newPhoto } = route?.params ?? takeAPic;
+
+  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
   const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false);
   const [photo, setPhoto] = useState<PhotoFile>(takeAPic);
@@ -103,31 +106,64 @@ const AlbumScreen: React.FC = () => {
     setIsFiltered(!isFiltered);
   };
 
+  const image1 = useImage(require('../assets/PhotoBooth.png'));
+
+  if (!image1) return null;
+
+  const calculatedWidth = image1.width();
+  const calculatedHeight = image1.height();
+
+  // Calculate scale to fit screen
+  const scaleX = (screenWidth * 0.95) / calculatedWidth;
+  const scaleY = (screenHeight * 0.8) / calculatedHeight;
+  const scale = Math.min(scaleX, scaleY); // To maintain aspect ratio
+
+  const imageWidth = calculatedWidth * scale;
+  const imageHeight = calculatedHeight * scale;
+
+  // Optional: center the image
+  const offsetX = (screenWidth - imageWidth) / 2;
+  const offsetY = (screenHeight * 0.8 - imageHeight) / 2;
+
   return (
     <SafeAreaView style={albumScreenStyles.container}>
       <View style={albumScreenStyles.imageContainer}>
-        {!isFiltered ? (
+        {isFiltered ? (
           // <AtelierTwist />
           <PhotoFilter photo={newPhoto ?? takeAPic} />
         ) : (
           // <PhotoFilter photo={newPhoto ?? takeAPic} />
-          <Image
-            source={
-              !photo
-                ? {
-                    uri: `file://${photo.path}`,
-                  }
-                : require('../assets/PhotoBooth.png')
-            }
-            style={albumScreenStyles.fullImage}
-            resizeMode="cover"
-          />
+          <Canvas style={albumScreenStyles.innerImage}>
+            <Image
+              image={image1}
+              // fit="contain"
+              x={offsetX}
+              y={offsetY}
+              width={imageWidth}
+              height={imageHeight}
+            />
+          </Canvas>
+          /* <Image
+              source={
+                !photo
+                  ? {
+                      uri: `file://${photo.path}`,
+                    }
+                  : require('../assets/PhotoBooth.png')
+              }
+              style={albumScreenStyles.fullImage}
+              resizeMode="cover"
+            /> */
         )}
       </View>
       <View style={albumScreenStyles.bottomButtons}>
         <Button
           onPress={applyOperaAtelierTwist}
-          title="The Opera Atelier Twist"
+          title={
+            isFiltered
+              ? 'Revert to the Original Photo'
+              : 'The Opera Atelier Twist'
+          }
           color="gold"
           accessibilityLabel="This button applies an Opera Atelier style filter to your photo"
         />
