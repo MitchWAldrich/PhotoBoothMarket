@@ -11,8 +11,6 @@ import {
   Shadow,
   useSVG,
   Skia,
-  ImageSVG,
-  fitbox,
   rect,
 } from '@shopify/react-native-skia';
 import { Dimensions } from 'react-native';
@@ -48,7 +46,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
   const calculatedHeight = image1.height();
 
   // Calculate scale to fit screen
-  const scaleX = screenWidth / calculatedWidth;
+  const scaleX = (screenWidth * 0.95) / calculatedWidth;
   const scaleY = (screenHeight * 0.8) / calculatedHeight;
   const scale = Math.min(scaleX, scaleY); // To maintain aspect ratio
 
@@ -104,20 +102,20 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
   const firstPercent = 0.3;
   const secondPercent = 0.7;
 
-  const frameWidthNum = 400;
-  const frameHeightNum = 630;
-  const frameWidth = `400`;
-  const frameHeight = `630`;
+  const frameWidthNum = imageWidth;
+  const frameHeightNum = imageHeight;
+  // const frameWidth = `${imageWidth}`;
+  // const frameHeight = `${imageHeight}`;
 
-  const topFrameCoord = `100`;
+  // const topFrameCoord = `100`;
   const bottomFrameCoord = `630`;
-  const upperTopCurveCoord = `90`;
-  const lowerTopCurveCoord = `110`;
+  const upperTopCurveCoord = `${(offsetY - 10).toString()}`;
+  const lowerTopCurveCoord = `${(offsetY + 10).toString()}`;
 
-  const cornerCurve = 0.165;
-  const smallCurve = 0.0525;
-  const mediumCurve = 0.14;
-  const middleCurve = 0.09;
+  const cornerCurve = 0.175;
+  const smallCurve = 0.0625;
+  const mediumCurve = 0.15;
+  const middleCurve = 0.1;
 
   const fullFrameWidth =
     frameWidthNum * cornerCurve +
@@ -130,21 +128,21 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     frameWidthNum * smallCurve +
     frameWidthNum * cornerCurve;
 
-  const outerRightCurveCoord = `${(fullFrameWidth + 10).toString()}`;
-  const innerRightCurveCoord = `${(fullFrameWidth - 10).toString()}`;
+  const outerRightCurveCoord = `${(imageWidth + offsetX + 10).toString()}`;
+  const innerRightCurveCoord = `${(imageWidth + offsetX - 10).toString()}`;
 
   const cornerLengthHorizontal = frameWidthNum * cornerCurve;
   const cornerLengthVertical = frameHeightNum * cornerCurve;
 
   const framePath = `
- M 0 ${topFrameCoord}
+ M ${offsetX} ${offsetY}
   C ${frameWidthNum * cornerCurve * firstPercent} ${upperTopCurveCoord}, ${(
     frameWidthNum *
     cornerCurve *
     secondPercent
   ).toString()} ${upperTopCurveCoord}, ${(
     frameWidthNum * cornerCurve
-  ).toString()} ${topFrameCoord}
+  ).toString()} ${offsetY}
   C ${(
     frameWidthNum * cornerCurve +
     frameWidthNum * smallCurve * secondPercent
@@ -154,7 +152,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
   ).toString()} ${lowerTopCurveCoord}, ${(
     frameWidthNum * cornerCurve +
     frameWidthNum * smallCurve
-  ).toString()} ${topFrameCoord} 
+  ).toString()} ${offsetY} 
   C ${(
     frameWidthNum * cornerCurve +
     frameWidthNum * smallCurve +
@@ -167,7 +165,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     frameWidthNum * cornerCurve +
     frameWidthNum * smallCurve +
     frameWidthNum * mediumCurve
-  ).toString()}  ${topFrameCoord}
+  ).toString()}  ${offsetY}
   C ${(
     frameWidthNum * cornerCurve +
     frameWidthNum * smallCurve +
@@ -183,7 +181,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     frameWidthNum * smallCurve +
     frameWidthNum * mediumCurve +
     frameWidthNum * smallCurve
-  ).toString()}  ${topFrameCoord} 
+  ).toString()}  ${offsetY} 
   C ${(
     frameWidthNum * cornerCurve +
     frameWidthNum * smallCurve +
@@ -202,7 +200,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     frameWidthNum * mediumCurve +
     frameWidthNum * smallCurve +
     frameWidthNum * middleCurve
-  ).toString()}  ${topFrameCoord}
+  ).toString()}  ${offsetY}
   C ${(
     frameWidthNum * cornerCurve +
     frameWidthNum * smallCurve +
@@ -224,7 +222,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     frameWidthNum * smallCurve +
     frameWidthNum * middleCurve +
     frameWidthNum * smallCurve
-  ).toString()} ${topFrameCoord}
+  ).toString()} ${offsetY}
   C ${(
     frameWidthNum * cornerCurve +
     frameWidthNum * smallCurve +
@@ -249,7 +247,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     frameWidthNum * middleCurve +
     frameWidthNum * smallCurve +
     frameWidthNum * mediumCurve
-  ).toString()}  ${topFrameCoord}
+  ).toString()}  ${offsetY}
   C ${(
     frameWidthNum * cornerCurve +
     frameWidthNum * smallCurve +
@@ -277,7 +275,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     frameWidthNum * smallCurve +
     frameWidthNum * mediumCurve +
     frameWidthNum * smallCurve
-  ).toString()}  ${topFrameCoord}
+  ).toString()}  ${offsetY}
   C ${(
     frameWidthNum * cornerCurve +
     frameWidthNum * smallCurve +
@@ -298,81 +296,84 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     frameWidthNum * mediumCurve +
     frameWidthNum * smallCurve +
     frameWidthNum * cornerCurve * secondPercent
-  ).toString()} ${upperTopCurveCoord}, ${fullFrameWidth.toString()} ${topFrameCoord}
+  ).toString()} ${upperTopCurveCoord}, ${(
+    imageWidth + offsetX
+  ).toString()} ${offsetY}
   
+
   C ${outerRightCurveCoord} ${(
-    100 +
+    offsetY +
     cornerLengthVertical * firstPercent
   ).toString()}, ${outerRightCurveCoord} ${(
-    100 +
+    offsetY +
     cornerLengthVertical * secondPercent
-  ).toString()}, ${fullFrameWidth.toString()} ${(
-    100 + cornerLengthVertical
+  ).toString()}, ${(imageWidth + offsetX).toString()} ${(
+    offsetY + cornerLengthVertical
   ).toString()}
   C ${innerRightCurveCoord} ${(
-    100 +
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve * secondPercent
   ).toString()}, ${innerRightCurveCoord} ${(
-    100 +
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve * firstPercent
-  ).toString()}, ${fullFrameWidth.toString()} ${(
-    100 +
+  ).toString()}, ${(imageWidth + offsetX).toString()} ${(
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve
   ).toString()}
   C ${innerRightCurveCoord} ${(
-    100 +
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve * firstPercent
   ).toString()}, ${innerRightCurveCoord} ${(
-    100 +
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve * secondPercent
-  ).toString()}, ${fullFrameWidth.toString()} ${(
-    100 +
+  ).toString()}, ${(imageWidth + offsetX).toString()} ${(
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve
   ).toString()}
   C ${innerRightCurveCoord} ${(
-    100 +
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve +
     frameHeightNum * smallCurve * firstPercent
   ).toString()},  ${innerRightCurveCoord} ${(
-    100 +
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve +
     frameHeightNum * smallCurve * secondPercent
-  ).toString()}, ${fullFrameWidth.toString()} ${(
-    100 +
+  ).toString()}, ${(imageWidth + offsetX).toString()} ${(
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve +
     frameHeightNum * smallCurve
   ).toString()}
   C ${outerRightCurveCoord} ${(
-    100 +
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve +
     frameHeightNum * smallCurve +
     frameHeightNum * middleCurve * firstPercent
   ).toString()}, ${outerRightCurveCoord} ${(
-    100 +
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve +
     frameHeightNum * smallCurve +
     frameHeightNum * middleCurve * secondPercent
-  ).toString()}, ${fullFrameWidth.toString()} ${(
-    100 +
+  ).toString()}, ${(imageWidth + offsetX).toString()} ${(
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve +
@@ -380,7 +381,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     frameHeightNum * middleCurve
   ).toString()}
   C ${innerRightCurveCoord} ${(
-    100 +
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve +
@@ -388,15 +389,15 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     frameHeightNum * middleCurve +
     frameHeightNum * smallCurve * firstPercent
   ).toString()}, ${innerRightCurveCoord} ${(
-    100 +
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve +
     frameHeightNum * smallCurve +
     frameHeightNum * middleCurve +
     frameHeightNum * smallCurve * secondPercent
-  ).toString()}, ${fullFrameWidth.toString()} ${(
-    100 +
+  ).toString()}, ${(imageWidth + offsetX).toString()} ${(
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve +
@@ -405,7 +406,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     frameHeightNum * smallCurve
   ).toString()}
   C ${innerRightCurveCoord}  ${(
-    100 +
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve +
@@ -414,7 +415,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve * firstPercent
   ).toString()}, ${innerRightCurveCoord} ${(
-    100 +
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve +
@@ -422,8 +423,8 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     frameHeightNum * middleCurve +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve * secondPercent
-  ).toString()}, ${fullFrameWidth.toString()} ${(
-    100 +
+  ).toString()}, ${(imageWidth + offsetX).toString()} ${(
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve +
@@ -433,7 +434,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     frameHeightNum * mediumCurve
   ).toString()}
    C ${innerRightCurveCoord} ${(
-    100 +
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve +
@@ -443,7 +444,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     frameHeightNum * mediumCurve +
     frameHeightNum * smallCurve * firstPercent
   ).toString()}, ${innerRightCurveCoord} ${(
-    100 +
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve +
@@ -452,8 +453,8 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve +
     frameHeightNum * smallCurve * secondPercent
-  ).toString()}, ${fullFrameWidth.toString()} ${(
-    100 +
+  ).toString()}, ${(imageWidth + offsetX).toString()} ${(
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve +
@@ -464,7 +465,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     frameHeightNum * smallCurve
   ).toString()}
   C ${outerRightCurveCoord} ${(
-    100 +
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve +
@@ -475,7 +476,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     frameHeightNum * smallCurve +
     frameHeightNum * cornerCurve * firstPercent
   ).toString()}, ${outerRightCurveCoord} ${(
-    100 +
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve +
@@ -485,8 +486,8 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     frameHeightNum * mediumCurve +
     frameHeightNum * smallCurve +
     frameHeightNum * cornerCurve * secondPercent
-  ).toString()}, ${fullFrameWidth.toString()} ${(
-    100 +
+  ).toString()}, ${(imageWidth + offsetX).toString()} ${(
+    offsetY +
     cornerLengthVertical +
     frameHeightNum * smallCurve +
     frameHeightNum * mediumCurve +
@@ -498,7 +499,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     frameHeightNum * cornerCurve
   ).toString()}
 
-  V ${frameHeight}
+  
 
   
   C 322 640, 313 640, 305 ${bottomFrameCoord}
@@ -510,9 +511,9 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
   C 78 620, 87 620, ${(
     frameWidthNum * cornerCurve
   ).toString()} ${bottomFrameCoord}
-  C 23 640, 47 640, 0 ${bottomFrameCoord}
+  C 23 640, 47 640, ${offsetX} ${bottomFrameCoord}
 
-  H 0 
+  H ${offsetX} 
   Z`;
 
   const cornerWidth = 256;
@@ -590,7 +591,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
             </Paint>
             {/* <Shadow dx={15} dy={15} blur={20} color="#3a2a1a" /> */}
             {/* Main frame rectangle */}
-            <Path path={framePath} strokeWidth={20} style="stroke">
+            <Path path={framePath} strokeWidth={16} style="stroke">
               <LinearGradient
                 start={vec(20, 20)}
                 end={vec(320, 440)}
