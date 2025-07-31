@@ -11,9 +11,6 @@ import {
   Shadow,
   useSVG,
   Skia,
-  ImageSVG,
-  fitbox,
-  rect,
 } from '@shopify/react-native-skia';
 import { Dimensions } from 'react-native';
 import { PhotoFilterProps } from '../../types/PhotoFilter';
@@ -48,7 +45,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
   const calculatedHeight = image1.height();
 
   // Calculate scale to fit screen
-  const scaleX = screenWidth / calculatedWidth;
+  const scaleX = (screenWidth * 0.95) / calculatedWidth;
   const scaleY = (screenHeight * 0.8) / calculatedHeight;
   const scale = Math.min(scaleX, scaleY); // To maintain aspect ratio
 
@@ -84,43 +81,849 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     }
   });
 
-  const wavyRectangle = `
-       M 10 50
-      C 20 20, 30 80, 40 50
-      C 50 20, 60 80, 70 50
-      C 80 20, 90 80, 100 50
-      C 110 20, 120 80, 110 50
-      V 220
-      H 10
-      Z
-    `;
+  const firstPercent = 0.3;
+  const secondPercent = 0.7;
 
-  // const framePath = `M0 ${
-  //   (screenHeight * 0.8 - imageHeight) / 2
-  // } H${screenWidth} V${
-  //   screenHeight * 0.8 - (screenHeight * 0.8 - imageHeight) / 2
-  // } H0 Z`;
+  const frameWidthNum = imageWidth;
+  const frameHeightNum = imageHeight;
+
+  const upperTopCurveCoord = `${(offsetY - 10).toString()}`;
+  const lowerTopCurveCoord = `${(offsetY + 10).toString()}`;
+  const upperBottomCurveCoord = `${(offsetY + imageHeight - 10).toString()}`;
+  const lowerBottomCurveCoord = `${(offsetY + imageHeight + 10).toString()}`;
+
+  const cornerCurve = 0.175;
+  const smallCurve = 0.0625;
+  const mediumCurve = 0.15;
+  const middleCurve = 0.1;
+
+  const outerRightCurveCoord = `${(imageWidth + offsetX + 10).toString()}`;
+  const innerRightCurveCoord = `${(imageWidth + offsetX - 10).toString()}`;
+  const outerLeftCurveCoord = `${(offsetX + 10).toString()}`;
+  const innerLeftCurveCoord = `${(offsetX - 10).toString()}`;
+
+  const cornerLengthVertical = frameHeightNum * cornerCurve;
 
   const framePath = `
-  M 0 100
-  C 23 90, 47 90, 70 100
-  C 78 110, 87 110, 95 100 
-  C 117 115, 133 110, 155 100
-  C 163 110, 172 110, 180 100 
-  C 193 90, 207 90, 220 100
-  C 228 110, 237 110, 245 100
-  C 267 110, 283 110, 305 100
-  C 313 110, 322 110, 330 100
-  C 353 90, 377 90, 400 100
-  H 400
-  V 630
-  H 0 
-  Z`;
+ M ${offsetX} ${offsetY}
+  C ${frameWidthNum * cornerCurve * firstPercent} ${upperTopCurveCoord}, ${(
+    frameWidthNum *
+    cornerCurve *
+    secondPercent
+  ).toString()} ${upperTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve
+  ).toString()} ${offsetY}
+  C ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve * secondPercent
+  ).toString()} ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve * firstPercent
+  ).toString()} ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve
+  ).toString()} ${offsetY} 
+  C ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve * firstPercent
+  ).toString()} ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve * secondPercent
+  ).toString()} ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve
+  ).toString()}  ${offsetY}
+  C ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve * firstPercent
+  ).toString()}  ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve * secondPercent
+  ).toString()}  ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve
+  ).toString()}  ${offsetY} 
+  C ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve * firstPercent
+  ).toString()} ${upperTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve * secondPercent
+  ).toString()} ${upperTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve
+  ).toString()}  ${offsetY}
+  C ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve * firstPercent
+  ).toString()} ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve * secondPercent
+  ).toString()} ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve
+  ).toString()} ${offsetY}
+  C ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve * firstPercent
+  ).toString()}  ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve * secondPercent
+  ).toString()}  ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve
+  ).toString()}  ${offsetY}
+  C ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve * firstPercent
+  ).toString()}  ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve * secondPercent
+  ).toString()}  ${lowerTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve
+  ).toString()}  ${offsetY}
+  C ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * cornerCurve * firstPercent
+  ).toString()} ${upperTopCurveCoord}, ${(
+    frameWidthNum * cornerCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * middleCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * mediumCurve +
+    frameWidthNum * smallCurve +
+    frameWidthNum * cornerCurve * secondPercent
+  ).toString()} ${upperTopCurveCoord}, ${(
+    imageWidth + offsetX
+  ).toString()} ${offsetY}
+  
 
-  const cornerWidth = 256;
-  const cornerHeight = 256;
-  const cornerSrc = rect(0, 0, frame.width(), frame.height());
-  const cornerDst = rect(0, 0, cornerWidth, cornerHeight);
+  C ${outerRightCurveCoord} ${(
+    offsetY +
+    cornerLengthVertical * firstPercent
+  ).toString()}, ${outerRightCurveCoord} ${(
+    offsetY +
+    cornerLengthVertical * secondPercent
+  ).toString()}, ${(imageWidth + offsetX).toString()} ${(
+    offsetY + cornerLengthVertical
+  ).toString()}
+  C ${innerRightCurveCoord} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve * secondPercent
+  ).toString()}, ${innerRightCurveCoord} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve * firstPercent
+  ).toString()}, ${(imageWidth + offsetX).toString()} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve
+  ).toString()}
+  C ${innerRightCurveCoord} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve * firstPercent
+  ).toString()}, ${innerRightCurveCoord} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve * secondPercent
+  ).toString()}, ${(imageWidth + offsetX).toString()} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve
+  ).toString()}
+  C ${innerRightCurveCoord} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve * firstPercent
+  ).toString()},  ${innerRightCurveCoord} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve * secondPercent
+  ).toString()}, ${(imageWidth + offsetX).toString()} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve
+  ).toString()}
+  C ${outerRightCurveCoord} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve * firstPercent
+  ).toString()}, ${outerRightCurveCoord} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve * secondPercent
+  ).toString()}, ${(imageWidth + offsetX).toString()} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve
+  ).toString()}
+  C ${innerRightCurveCoord} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve * firstPercent
+  ).toString()}, ${innerRightCurveCoord} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve * secondPercent
+  ).toString()}, ${(imageWidth + offsetX).toString()} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve
+  ).toString()}
+  C ${innerRightCurveCoord}  ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve * firstPercent
+  ).toString()}, ${innerRightCurveCoord} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve * secondPercent
+  ).toString()}, ${(imageWidth + offsetX).toString()} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve
+  ).toString()}
+   C ${innerRightCurveCoord} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve * firstPercent
+  ).toString()}, ${innerRightCurveCoord} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve * secondPercent
+  ).toString()}, ${(imageWidth + offsetX).toString()} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve
+  ).toString()}
+  C ${outerRightCurveCoord} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * cornerCurve * firstPercent
+  ).toString()}, ${outerRightCurveCoord} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * cornerCurve * secondPercent
+  ).toString()}, ${(imageWidth + offsetX).toString()} ${(
+    offsetY +
+    cornerLengthVertical +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * middleCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * mediumCurve +
+    frameHeightNum * smallCurve +
+    frameHeightNum * cornerCurve
+  ).toString()}
+
+
+  C ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve * firstPercent
+  ).toString()} ${lowerBottomCurveCoord}, ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve * secondPercent
+  ).toString()} ${lowerBottomCurveCoord}, ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve
+  ).toString()} ${(offsetY + imageHeight).toString()}
+  C ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve * firstPercent
+  ).toString()} ${upperBottomCurveCoord}, ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve * secondPercent
+  ).toString()} ${upperBottomCurveCoord}, ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve
+  ).toString()} ${(offsetY + imageHeight).toString()}
+  C ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve * firstPercent
+  ).toString()} ${upperBottomCurveCoord}, ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve * secondPercent
+  ).toString()} ${upperBottomCurveCoord}, ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve
+  ).toString()} ${(offsetY + imageHeight).toString()}
+  C ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve * firstPercent
+  ).toString()} ${upperBottomCurveCoord}, ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve * secondPercent
+  ).toString()} ${upperBottomCurveCoord}, ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve
+  ).toString()} ${(offsetY + imageHeight).toString()}
+  C ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve -
+    imageWidth * middleCurve * firstPercent
+  ).toString()} ${lowerBottomCurveCoord}, ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve -
+    imageWidth * middleCurve * secondPercent
+  ).toString()} ${lowerBottomCurveCoord}, ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve -
+    imageWidth * middleCurve
+  ).toString()} ${(offsetY + imageHeight).toString()}
+  C ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve -
+    imageWidth * middleCurve -
+    imageWidth * smallCurve * firstPercent
+  ).toString()} ${upperBottomCurveCoord}, ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve -
+    imageWidth * middleCurve -
+    imageWidth * smallCurve * secondPercent
+  ).toString()} ${upperBottomCurveCoord}, ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve -
+    imageWidth * middleCurve -
+    imageWidth * smallCurve
+  ).toString()} ${(offsetY + imageHeight).toString()}
+  C ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve -
+    imageWidth * middleCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve * firstPercent
+  ).toString()} ${upperBottomCurveCoord}, ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve -
+    imageWidth * middleCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve * secondPercent
+  ).toString()} ${upperBottomCurveCoord}, ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve -
+    imageWidth * middleCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve
+  ).toString()} ${(offsetY + imageHeight).toString()}
+  C ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve -
+    imageWidth * middleCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve * firstPercent
+  ).toString()} ${upperBottomCurveCoord}, ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve -
+    imageWidth * middleCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve * secondPercent
+  ).toString()} ${upperBottomCurveCoord}, ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve -
+    imageWidth * middleCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve
+  ).toString()} ${(offsetY + imageHeight).toString()}
+  C ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve -
+    imageWidth * middleCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve -
+    imageWidth * cornerCurve * firstPercent
+  ).toString()} ${lowerBottomCurveCoord}, ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve -
+    imageWidth * middleCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve -
+    imageWidth * cornerCurve * secondPercent
+  ).toString()} ${lowerBottomCurveCoord}, ${(
+    offsetX +
+    imageWidth -
+    imageWidth * cornerCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve -
+    imageWidth * middleCurve -
+    imageWidth * smallCurve -
+    imageWidth * mediumCurve -
+    imageWidth * smallCurve -
+    imageWidth * cornerCurve
+  ).toString()} ${(offsetY + imageHeight).toString()}
+
+
+  C ${innerLeftCurveCoord} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve * firstPercent
+  ).toString()},  ${innerLeftCurveCoord} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve * secondPercent
+  ).toString()}, ${offsetX} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve
+  ).toString()}
+  C ${outerLeftCurveCoord} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve * firstPercent
+  ).toString()},  ${outerLeftCurveCoord} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve * secondPercent
+  ).toString()}, ${offsetX} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve
+  ).toString()}
+  C ${outerLeftCurveCoord} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve * firstPercent
+  ).toString()},  ${outerLeftCurveCoord} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve * secondPercent
+  ).toString()}, ${offsetX} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve
+  ).toString()}
+  C ${outerLeftCurveCoord} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve * firstPercent
+  ).toString()},  ${outerLeftCurveCoord} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve * secondPercent
+  ).toString()}, ${offsetX} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve
+  ).toString()}
+  C ${innerLeftCurveCoord} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve -
+    imageHeight * middleCurve * firstPercent
+  ).toString()},  ${innerLeftCurveCoord} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve -
+    imageHeight * middleCurve * secondPercent
+  ).toString()}, ${offsetX} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve -
+    imageHeight * middleCurve
+  ).toString()}
+  C ${outerLeftCurveCoord} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve -
+    imageHeight * middleCurve -
+    imageHeight * smallCurve * firstPercent
+  ).toString()},  ${outerLeftCurveCoord} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve -
+    imageHeight * middleCurve -
+    imageHeight * smallCurve * secondPercent
+  ).toString()}, ${offsetX} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve -
+    imageHeight * middleCurve -
+    imageHeight * smallCurve
+  ).toString()}
+  C ${outerLeftCurveCoord} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve -
+    imageHeight * middleCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve * firstPercent
+  ).toString()},  ${outerLeftCurveCoord} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve -
+    imageHeight * middleCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve * secondPercent
+  ).toString()}, ${offsetX} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve -
+    imageHeight * middleCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve
+  ).toString()}
+  C ${outerLeftCurveCoord} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve -
+    imageHeight * middleCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve * firstPercent
+  ).toString()},  ${outerLeftCurveCoord} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve -
+    imageHeight * middleCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve * secondPercent
+  ).toString()}, ${offsetX} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve -
+    imageHeight * middleCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve
+  ).toString()}
+  C ${innerLeftCurveCoord} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve -
+    imageHeight * middleCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve -
+    imageHeight * cornerCurve * firstPercent
+  ).toString()},  ${innerLeftCurveCoord} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve -
+    imageHeight * middleCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve -
+    imageHeight * cornerCurve * secondPercent
+  ).toString()}, ${offsetX} ${(
+    offsetY +
+    imageHeight -
+    imageHeight * cornerCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve -
+    imageHeight * middleCurve -
+    imageHeight * smallCurve -
+    imageHeight * mediumCurve -
+    imageHeight * smallCurve -
+    imageHeight * cornerCurve
+  ).toString()}
+  
+  Z`;
 
   return (
     <>
@@ -192,7 +995,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
             </Paint>
             {/* <Shadow dx={15} dy={15} blur={20} color="#3a2a1a" /> */}
             {/* Main frame rectangle */}
-            <Path path={framePath} strokeWidth={8} style="stroke">
+            <Path path={framePath} strokeWidth={16} style="stroke">
               <LinearGradient
                 start={vec(20, 20)}
                 end={vec(320, 440)}
@@ -234,3 +1037,8 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
     </>
   );
 };
+
+// C 377 640, 353 640, ${(
+//   frameWidthNum *
+//   ((100 - cornerCurve * 100) / 100)
+// ).toString()} ${bottomFrameCoord}
