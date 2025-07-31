@@ -11,7 +11,6 @@ import {
   Shadow,
   useSVG,
   Skia,
-  rect,
 } from '@shopify/react-native-skia';
 import { Dimensions } from 'react-native';
 import { PhotoFilterProps } from '../../types/PhotoFilter';
@@ -81,23 +80,6 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
       console.warn('Failed to create path from:', d);
     }
   });
-
-  const wavyRectangle = `
-       M 10 50
-      C 20 20, 30 80, 40 50
-      C 50 20, 60 80, 70 50
-      C 80 20, 90 80, 100 50
-      C 110 20, 120 80, 110 50
-      V 220
-      H 10
-      Z
-    `;
-
-  // const framePath = `M0 ${
-  //   (screenHeight * 0.8 - imageHeight) / 2
-  // } H${screenWidth} V${
-  //   screenHeight * 0.8 - (screenHeight * 0.8 - imageHeight) / 2
-  // } H0 Z`;
 
   const firstPercent = 0.3;
   const secondPercent = 0.7;
@@ -942,11 +924,6 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
   ).toString()}
   
   Z`;
-
-  const cornerWidth = 256;
-  const cornerHeight = 256;
-  const cornerSrc = rect(0, 0, frame.width(), frame.height());
-  const cornerDst = rect(0, 0, cornerWidth, cornerHeight);
 
   return (
     <>
