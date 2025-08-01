@@ -11,4 +11,9 @@ export const photoFilterStyles = StyleSheet.create({
     backgroundColor: 'blue',
     alignSelf: 'center',
   },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
