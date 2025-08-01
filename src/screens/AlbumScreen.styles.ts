@@ -12,12 +12,12 @@ export const albumScreenStyles = StyleSheet.create({
   },
   imageContainer: {
     flex: 8,
-    backgroundColor: 'blue',
+    backgroundColor: 'red',
   },
   innerImage: {
     flex: 1,
     width: '100%',
-    backgroundColor: 'grey',
+    backgroundColor: 'green',
   },
   fullImage: {
     width: '100%',
