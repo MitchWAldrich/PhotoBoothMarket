@@ -42,6 +42,7 @@ const AlbumScreen: React.FC = () => {
   const [photo, setPhoto] = useState<PhotoFile>(takeAPic);
   const [photos, setPhotos] = useState<PhotoFileWithID[]>([]);
   const [isFiltered, setIsFiltered] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const hasAndroidPermission = async () => {
     const getCheckPermissionPromise = () => {
@@ -104,6 +105,11 @@ const AlbumScreen: React.FC = () => {
 
   const applyOperaAtelierTwist = () => {
     setIsFiltered(!isFiltered);
+    setIsLoading(true);
+  };
+
+  const getLoading = () => {
+    setIsLoading(false);
   };
 
   const image1 = useImage(require('../assets/PhotoBooth.png'));
@@ -128,11 +134,11 @@ const AlbumScreen: React.FC = () => {
   return (
     <SafeAreaView style={albumScreenStyles.container}>
       <View style={albumScreenStyles.imageContainer}>
+        {/* <AtelierTwist />  */}
         {isFiltered ? (
-          // <AtelierTwist />
           <PhotoFilter photo={newPhoto ?? takeAPic} />
         ) : (
-          // <PhotoFilter photo={newPhoto ?? takeAPic} />
+          /* <PhotoFilter photo={newPhoto ?? takeAPic} /> */
           <Canvas style={albumScreenStyles.innerImage}>
             <Image
               image={image1}
@@ -143,7 +149,8 @@ const AlbumScreen: React.FC = () => {
               height={imageHeight}
             />
           </Canvas>
-          /* <Image
+        )}
+        {/* <Image
               source={
                 !photo
                   ? {
@@ -153,8 +160,7 @@ const AlbumScreen: React.FC = () => {
               }
               style={albumScreenStyles.fullImage}
               resizeMode="cover"
-            /> */
-        )}
+            /> */}
       </View>
       <View style={albumScreenStyles.bottomButtons}>
         <Button
