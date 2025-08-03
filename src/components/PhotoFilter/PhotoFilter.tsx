@@ -11,33 +11,38 @@ import {
   Shadow,
   AnimatedProp,
   PathDef,
+  Skia,
+  Shader,
+  ImageShader,
+  Fill,
 } from '@shopify/react-native-skia';
-import { Dimensions, View, ActivityIndicator } from 'react-native';
+import { Dimensions, Text, View } from 'react-native';
 import { PhotoFilterProps } from '../../types/PhotoFilter';
 import { photoFilterStyles } from './PhotoFilter.styles';
 import { useEffect, useState } from 'react';
-import { calculateFramePath } from '../../utils/createFramePath';
 
 // import { BaroqueVignetteOverlay } from './Filters/BaroqueVignetteOverlay';
 // import { BaroqueBrushStrokes } from './Filters/BaroqueBrushStrokes';
 
 // import { BaroqueVignetteOverlay } from './Filters/BaroqueVignetteOverlay';
-// import { BaroqueBrushStrokes } from './Filters/BaroqueBrushStrokes';
+import brushStrokes from '../../assets/brushstrokes';
 
 // function FilteredPhoto({ uri, width, height }) {
-export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
+export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo, path }) => {
+  console.log('isThereAPath?', path);
+
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
   const [framePath, setFramePath] = useState<AnimatedProp<PathDef>>('');
   const [isReady, setIsReady] = useState<boolean>(false);
+  const [currentSeed, setCurrentSeed] = useState<number>(Math.random() * 1000);
 
   const image1 = useImage(require('../../assets/PhotoBooth.png'));
   // Loads an image from the network
   // const image2 = useImage("https://picsum.photos/200/300");
 
-  console.log('isReady?', isReady);
   // const texture = useImage(require('../../assets/baroque.png')); // texture overlay
-  const brushStrokes = useImage(require('../../assets/bar3.jpg'));
+  // const brushStrokes = useImage(require('../../assets/bar3.jpg'));
   const texture = useImage(require('../../assets/bar2.jpg')); // texture overlay
   const calculatedWidth = image1?.width() ?? 0;
   const calculatedHeight = image1?.height() ?? 0;
@@ -54,38 +59,40 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
   const offsetX = (screenWidth - imageWidth) / 2;
   const offsetY = (screenHeight * 0.8 - imageHeight) / 2;
 
-  // useEffect(() => {
-  // Size and position of overlay image (e.g., centered, smaller)
-  // const textureScale = 0.3; // 30% of screen width
-  // const textureWidth = screenWidth * textureScale;
-  // const textureHeight = texture
-  //   ? texture.height() / texture.width()
-  //   : 0 * textureWidth;
-  // console.log('textureH', textureHeight);
-
-  const calculatedPath = calculateFramePath(
-    imageWidth,
-    imageHeight,
-    offsetX,
-    offsetY,
-  );
-
   useEffect(() => {
-    if (image1 && texture && brushStrokes) {
+    if (image1 && texture) {
       setIsReady(true);
     }
-  }, [image1, texture, brushStrokes]);
+  }, [image1, texture]);
 
   const temp = photo;
   console.log('temp', temp);
 
-  const allAssetsLoaded = image1 && texture && brushStrokes;
+  const allAssetsLoaded = image1 && texture && path;
+
+  // Create the RuntimeEffect
+  const runtimeEffect = Skia.RuntimeEffect.Make(brushStrokes);
+
+  if (!runtimeEffect) {
+    return (
+      <View>
+        <Text>Failed to create shader effect</Text>
+      </View>
+    );
+  }
 
   if (!allAssetsLoaded) {
     return (
-      <View style={photoFilterStyles.loaderContainer}>
-        <ActivityIndicator size="large" color="#d4af37" />
-      </View>
+      <Canvas style={photoFilterStyles.imageContainer}>
+        <Image
+          image={image1}
+          // fit="contain"
+          x={offsetX}
+          y={offsetY}
+          width={imageWidth}
+          height={imageHeight}
+        />
+      </Canvas>
     );
   }
 
@@ -95,49 +102,52 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
         {/* Baroque-style color graded and sharpened base image */}
         {image1 && (
           <Group>
-            <Image
-              image={image1}
-              // fit="contain"
-              x={offsetX}
-              y={offsetY}
-              width={imageWidth}
-              height={imageHeight}
-            >
-              <ColorMatrix
-                matrix={[
-                  // R, G, B, A matrix to warm highlights and cool shadows
-                  1.1,
-                  0.1,
-                  0.0,
-                  0,
-                  0, // Red channel
-                  0.05,
-                  1.05,
-                  0.0,
-                  0,
-                  0, // Green channel
-                  0.0,
-                  0.0,
-                  0.95,
-                  0,
-                  0, // Blue channel
-                  0,
-                  0,
-                  0,
-                  1,
-                  0,
-                ]}
-              />
-            </Image>
-            <Image
-              image={texture}
-              x={offsetX}
-              y={offsetY}
-              width={imageWidth}
-              height={imageHeight}
-              opacity={0.25}
-              blendMode="overlay"
-              fit="cover"
+            <Fill>
+              <Shader
+                source={runtimeEffect}
+                uniforms={{
+                  u_Radius: 4,
+                  u_Seed: currentSeed,
+                  u_Width: imageWidth,
+                  u_Height: imageHeight,
+                }}
+              >
+                <ImageShader
+                  image={image1}
+                  fit="contain"
+                  rect={{
+                    x: offsetX,
+                    y: offsetY,
+                    width: imageWidth,
+                    height: imageHeight,
+                  }}
+                />
+              </Shader>
+            </Fill>
+            <ColorMatrix
+              matrix={[
+                // R, G, B, A matrix to warm highlights and cool shadows
+                1.1,
+                0.1,
+                0.0,
+                0,
+                0, // Red channel
+                0.05,
+                1.05,
+                0.0,
+                0,
+                0, // Green channel
+                0.0,
+                0.0,
+                0.95,
+                0,
+                0, // Blue channel
+                0,
+                0,
+                0,
+                1,
+                0,
+              ]}
             />
             {/* Dark base shadow */}
             <Paint color="#000000" style="fill" />
@@ -157,10 +167,11 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
                 colors={['rgba(0, 0, 0, 0.4)', 'rgba(0, 0, 0, 0.0)']}
               />
             </Paint>
-            {/* <Shadow dx={15} dy={15} blur={20} color="#3a2a1a" /> */}
+            <Shadow dx={15} dy={15} blur={20} color="#3a2a1a" />
+
             {/* Main frame rectangle */}
             {
-              <Path path={calculatedPath} strokeWidth={16} style="stroke">
+              <Path path={path} strokeWidth={16} style="stroke">
                 <LinearGradient
                   start={vec(20, 20)}
                   end={vec(320, 440)}
@@ -172,28 +183,8 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo }) => {
             }
           </Group>
         )}
-        {/* <BaroqueVignetteOverlay />
-            <BaroqueBrushStrokes /> */}
-        {/* Probably in the Group? */}
-        {/* Texture overlay for oil painting effect */}
-        {/* {texture && (
-          <Image
-            image={texture}
-            fit="cover"
-            x={0}
-            y={0}
-            width={screenWidth}
-            height={256}
-            opacity={0.25}
-            blendMode="overlay"
-          />
-        )} */}
       </Canvas>
     </>
   );
 };
-
-// C 377 640, 353 640, ${(
-//   frameWidthNum *
-//   ((100 - cornerCurve * 100) / 100)
-// ).toString()} ${bottomFrameCoord}
+//NEXT: IMPORT PHOTO (will speed things up too!)
