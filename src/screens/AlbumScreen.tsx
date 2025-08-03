@@ -10,17 +10,28 @@ import { PhotoFilter } from '../components/PhotoFilter/PhotoFilter';
 import ImageScroller from '../components/ImageScroller/ImageScroller';
 import { albumScreenStyles } from './AlbumScreen.styles';
 import { PhotoFile } from 'react-native-vision-camera';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import { PhotoFileWithID } from '../types/PhotoFileWithID';
 import { mockPhotoFiles } from '../mocks/photofiles';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {
   AlbumScreenNavigationProp,
   AlbumScreenRouteProp,
 } from '../types/RootStack';
 import AtelierTwist from '../components/BaroqueFilter/BaroqueFilter';
-import { Canvas, Image, useImage } from '@shopify/react-native-skia';
+import {
+  AnimatedProp,
+  Canvas,
+  Image,
+  PathDef,
+  useImage,
+} from '@shopify/react-native-skia';
+import { calculateFramePath } from '../utils/createFramePath';
 
 const AlbumScreen: React.FC = () => {
   const takeAPic: PhotoFile | (() => PhotoFile) = {
@@ -43,6 +54,7 @@ const AlbumScreen: React.FC = () => {
   const [photos, setPhotos] = useState<PhotoFileWithID[]>([]);
   const [isFiltered, setIsFiltered] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [framePath, setFramePath] = useState<AnimatedProp<PathDef>>('');
 
   const hasAndroidPermission = async () => {
     const getCheckPermissionPromise = () => {
@@ -99,25 +111,10 @@ const AlbumScreen: React.FC = () => {
     if (photo) CameraRoll.saveAsset(photo.path);
   };
 
-  const handleToggleCamera = (openState: boolean) => {
-    setIsButtonPressed(openState);
-  };
-
-  const applyOperaAtelierTwist = () => {
-    setIsFiltered(!isFiltered);
-    setIsLoading(true);
-  };
-
-  const getLoading = () => {
-    setIsLoading(false);
-  };
-
   const image1 = useImage(require('../assets/PhotoBooth.png'));
 
-  if (!image1) return null;
-
-  const calculatedWidth = image1.width();
-  const calculatedHeight = image1.height();
+  const calculatedWidth = image1?.width() ?? screenWidth;
+  const calculatedHeight = image1?.height() ?? screenHeight;
 
   // Calculate scale to fit screen
   const scaleX = (screenWidth * 0.95) / calculatedWidth;
@@ -131,12 +128,42 @@ const AlbumScreen: React.FC = () => {
   const offsetX = (screenWidth - imageWidth) / 2;
   const offsetY = (screenHeight * 0.8 - imageHeight) / 2;
 
+  useFocusEffect(
+    useCallback(() => {
+      // Runs when the screen comes into focus
+      console.log('Screen is now focused!');
+      setFramePath(
+        calculateFramePath(imageWidth, imageHeight, offsetX, offsetY),
+      );
+
+      return () => {
+        // Optional: cleanup when screen is unfocused
+        console.log('Screen unfocused');
+      };
+    }, [imageHeight, imageWidth, offsetX, offsetY]),
+  );
+
+  if (!image1) return null;
+
+  const handleToggleCamera = (openState: boolean) => {
+    setIsButtonPressed(openState);
+  };
+
+  const applyOperaAtelierTwist = () => {
+    setIsFiltered(!isFiltered);
+    setIsLoading(true);
+  };
+
+  const getLoading = () => {
+    setIsLoading(false);
+  };
+
   return (
     <SafeAreaView style={albumScreenStyles.container}>
       <View style={albumScreenStyles.imageContainer}>
         {/* <AtelierTwist />  */}
         {isFiltered ? (
-          <PhotoFilter photo={newPhoto ?? takeAPic} />
+          <PhotoFilter photo={newPhoto ?? takeAPic} path={framePath} />
         ) : (
           /* <PhotoFilter photo={newPhoto ?? takeAPic} /> */
           <Canvas style={albumScreenStyles.innerImage}>
