@@ -17,7 +17,7 @@ export const albumScreenStyles = StyleSheet.create({
   innerImage: {
     flex: 1,
     width: '100%',
-    backgroundColor: 'green',
+    backgroundColor: 'darkgrey',
   },
   fullImage: {
     width: '100%',
