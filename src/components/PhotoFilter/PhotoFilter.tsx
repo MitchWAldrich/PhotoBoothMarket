@@ -15,11 +15,15 @@ import {
   Shader,
   ImageShader,
   Fill,
+  RadialGradient,
+  TileMode,
+  RoundedRect,
+  Rect,
 } from '@shopify/react-native-skia';
 import { Dimensions, Text, View } from 'react-native';
 import { PhotoFilterProps } from '../../types/PhotoFilter';
 import { photoFilterStyles } from './PhotoFilter.styles';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 // import { BaroqueVignetteOverlay } from './Filters/BaroqueVignetteOverlay';
 // import { BaroqueBrushStrokes } from './Filters/BaroqueBrushStrokes';
@@ -35,9 +39,8 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo, path }) => {
 
   const [framePath, setFramePath] = useState<AnimatedProp<PathDef>>('');
   const [isReady, setIsReady] = useState<boolean>(false);
-  const [currentSeed, setCurrentSeed] = useState<number>(Math.random() * 1000);
 
-  const image1 = useImage(require('../../assets/PhotoBooth.png'));
+  const image1 = useImage(require('../../assets/market2.jpg'));
   // Loads an image from the network
   // const image2 = useImage("https://picsum.photos/200/300");
 
@@ -96,6 +99,8 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo, path }) => {
     );
   }
 
+  const border = 26;
+
   return (
     <>
       <Canvas style={photoFilterStyles.imageContainer}>
@@ -106,8 +111,8 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo, path }) => {
               <Shader
                 source={runtimeEffect}
                 uniforms={{
-                  u_Radius: 4,
-                  u_Seed: currentSeed,
+                  u_Radius: 12,
+                  u_Seed: 42,
                   u_Width: imageWidth,
                   u_Height: imageHeight,
                 }}
@@ -127,7 +132,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo, path }) => {
             <ColorMatrix
               matrix={[
                 // R, G, B, A matrix to warm highlights and cool shadows
-                1.1,
+                0.95,
                 0.1,
                 0.0,
                 0,
@@ -151,6 +156,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo, path }) => {
             />
             {/* Dark base shadow */}
             <Paint color="#000000" style="fill" />
+
             {/* Light gradient following the curved shape */}
             <Paint blendMode="multiply">
               {/* Chiaroscuro gradient #1 (left to right) */}
@@ -168,6 +174,37 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo, path }) => {
               />
             </Paint>
             <Shadow dx={15} dy={15} blur={20} color="#3a2a1a" />
+
+            {/* Vignette effect (radial gradient) */}
+            {/* <Rect
+              x={offsetX}
+              y={offsetY}
+              width={imageWidth}
+              height={imageHeight}
+              style="stroke"
+              strokeWidth={26}
+            >
+              <LinearGradient
+                start={vec(offsetX, offsetY)}
+                end={vec(offsetX + imageWidth, offsetY + imageHeight)}
+                colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.85)']}
+              />
+            </Rect> */}
+            <RoundedRect
+              x={offsetX + border / 2}
+              y={offsetY + border / 2}
+              width={imageWidth - border}
+              height={imageHeight - border}
+              r={24}
+              style="stroke"
+              strokeWidth={border}
+            >
+              <LinearGradient
+                start={vec(offsetX, offsetY)}
+                end={vec(offsetX + imageWidth, offsetY + imageHeight)}
+                colors={['rgba(0,0,0,0.75)', 'rgba(0,0,0,0.75)']}
+              />
+            </RoundedRect>
 
             {/* Main frame rectangle */}
             {
