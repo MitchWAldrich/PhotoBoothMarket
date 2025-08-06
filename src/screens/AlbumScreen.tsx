@@ -111,7 +111,7 @@ const AlbumScreen: React.FC = () => {
     if (photo) CameraRoll.saveAsset(photo.path);
   };
 
-  const image1 = useImage(require('../assets/PhotoBooth.png'));
+  const image1 = useImage(require('../assets/market2.jpg'));
 
   const calculatedWidth = image1?.width() ?? screenWidth;
   const calculatedHeight = image1?.height() ?? screenHeight;
@@ -132,6 +132,7 @@ const AlbumScreen: React.FC = () => {
     useCallback(() => {
       // Runs when the screen comes into focus
       console.log('Screen is now focused!');
+      console.log('innerOffset', offsetY);
       setFramePath(
         calculateFramePath(imageWidth, imageHeight, offsetX, offsetY),
       );
@@ -163,7 +164,7 @@ const AlbumScreen: React.FC = () => {
       <View style={albumScreenStyles.imageContainer}>
         {/* <AtelierTwist />  */}
         {isFiltered ? (
-          <PhotoFilter photo={newPhoto ?? takeAPic} path={framePath} />
+          <PhotoFilter photo={image1} path={framePath} />
         ) : (
           /* <PhotoFilter photo={newPhoto ?? takeAPic} /> */
           <Canvas style={albumScreenStyles.innerImage}>
