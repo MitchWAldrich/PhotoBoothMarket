@@ -19,16 +19,12 @@ import {
   TileMode,
   RoundedRect,
   Rect,
+  SkImage,
 } from '@shopify/react-native-skia';
 import { Dimensions, Text, View } from 'react-native';
 import { PhotoFilterProps } from '../../types/PhotoFilter';
 import { photoFilterStyles } from './PhotoFilter.styles';
 import { useEffect, useMemo, useState } from 'react';
-
-// import { BaroqueVignetteOverlay } from './Filters/BaroqueVignetteOverlay';
-// import { BaroqueBrushStrokes } from './Filters/BaroqueBrushStrokes';
-
-// import { BaroqueVignetteOverlay } from './Filters/BaroqueVignetteOverlay';
 import brushStrokes from '../../assets/brushstrokes';
 
 // function FilteredPhoto({ uri, width, height }) {
@@ -40,15 +36,22 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo, path }) => {
   const [framePath, setFramePath] = useState<AnimatedProp<PathDef>>('');
   const [isReady, setIsReady] = useState<boolean>(false);
 
-  const image1 = useImage(require('../../assets/market2.jpg'));
+  // const image1 = useImage(require('../../assets/market2.jpg'));
   // Loads an image from the network
   // const image2 = useImage("https://picsum.photos/200/300");
-
   // const texture = useImage(require('../../assets/baroque.png')); // texture overlay
   // const brushStrokes = useImage(require('../../assets/bar3.jpg'));
   const texture = useImage(require('../../assets/bar2.jpg')); // texture overlay
-  const calculatedWidth = image1?.width() ?? 0;
-  const calculatedHeight = image1?.height() ?? 0;
+
+  useEffect(() => {
+    if (photo && texture) {
+      setIsReady(true);
+    }
+  }, [photo, texture]);
+
+  if (!photo) return;
+  const calculatedWidth = photo?.width() ?? 0;
+  const calculatedHeight = photo?.height() ?? 0;
 
   // Calculate scale to fit screen
   const scaleX = (screenWidth * 0.95) / calculatedWidth;
@@ -61,17 +64,10 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo, path }) => {
   // Optional: center the image
   const offsetX = (screenWidth - imageWidth) / 2;
   const offsetY = (screenHeight * 0.8 - imageHeight) / 2;
-
-  useEffect(() => {
-    if (image1 && texture) {
-      setIsReady(true);
-    }
-  }, [image1, texture]);
-
   const temp = photo;
   console.log('temp', temp);
 
-  const allAssetsLoaded = image1 && texture && path;
+  const allAssetsLoaded = photo && texture && path;
 
   // Create the RuntimeEffect
   const runtimeEffect = Skia.RuntimeEffect.Make(brushStrokes);
@@ -83,12 +79,12 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo, path }) => {
       </View>
     );
   }
-
+  console.log('PHOTOOffset', offsetY);
   if (!allAssetsLoaded) {
     return (
       <Canvas style={photoFilterStyles.imageContainer}>
         <Image
-          image={image1}
+          image={temp}
           // fit="contain"
           x={offsetX}
           y={offsetY}
@@ -105,7 +101,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo, path }) => {
     <>
       <Canvas style={photoFilterStyles.imageContainer}>
         {/* Baroque-style color graded and sharpened base image */}
-        {image1 && (
+        {photo && (
           <Group>
             <Fill>
               <Shader
@@ -118,7 +114,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo, path }) => {
                 }}
               >
                 <ImageShader
-                  image={image1}
+                  image={photo}
                   fit="contain"
                   rect={{
                     x: offsetX,
@@ -176,7 +172,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo, path }) => {
             <Shadow dx={15} dy={15} blur={20} color="#3a2a1a" />
 
             {/* Vignette effect (radial gradient) */}
-            {/* <Rect
+            <Rect
               x={offsetX}
               y={offsetY}
               width={imageWidth}
@@ -189,8 +185,8 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo, path }) => {
                 end={vec(offsetX + imageWidth, offsetY + imageHeight)}
                 colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.85)']}
               />
-            </Rect> */}
-            <RoundedRect
+            </Rect>
+            {/* <RoundedRect
               x={offsetX + border / 2}
               y={offsetY + border / 2}
               width={imageWidth - border}
@@ -204,7 +200,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo, path }) => {
                 end={vec(offsetX + imageWidth, offsetY + imageHeight)}
                 colors={['rgba(0,0,0,0.75)', 'rgba(0,0,0,0.75)']}
               />
-            </RoundedRect>
+            </RoundedRect> */}
 
             {/* Main frame rectangle */}
             {
