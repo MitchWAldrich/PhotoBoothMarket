@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, Button, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import {
   Camera,
   CameraPermissionRequestResult,
@@ -103,14 +103,6 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
         >
           <View style={cameraStyles.innerCircle} />
         </TouchableOpacity>
-        <View style={cameraStyles.button}>
-          <Button
-            onPress={() => navigation.navigate('Album')}
-            title="Close Camera"
-            color="black"
-            accessibilityLabel="This button closes your phone's camera app"
-          />
-        </View>
       </View>
     );
   } else {
