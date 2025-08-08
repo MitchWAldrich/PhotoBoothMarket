@@ -7,11 +7,8 @@ export const cameraStyles = StyleSheet.create({
   },
   camera: {
     flex: 1, 
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 60,
-    left: 0,
+    backgroundColor: 'green',
+    width: '100%',
   },
   captureButton: {
     position: 'absolute',
@@ -31,7 +28,8 @@ export const cameraStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'red',
-    margin: 10,
+    width: '100%',
+    height: '100%',
   },
   innerCircle: {
     width: 60,
