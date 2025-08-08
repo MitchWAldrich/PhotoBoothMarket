@@ -7,19 +7,22 @@
 
 import 'react-native-reanimated';
 import React from 'react';
-import { useColorScheme } from 'react-native';
+import { useColorScheme, View } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 
 import { BottomTabs } from './src/components/BottomTabs/BottomTabs';
+import { appStyles } from './styles';
 
 function App() {
   // const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <NavigationContainer>
-      <BottomTabs />
-    </NavigationContainer>
+    <View style={appStyles.container}>
+      <NavigationContainer>
+        <BottomTabs />
+      </NavigationContainer>
+    </View>
   );
 }
 
