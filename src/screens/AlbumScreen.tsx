@@ -13,7 +13,6 @@ import { PhotoFile } from 'react-native-vision-camera';
 import { useCallback, useState } from 'react';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import { PhotoFileWithID } from '../types/PhotoFileWithID';
-import { mockPhotoFiles } from '../mocks/photofiles';
 import {
   useFocusEffect,
   useNavigation,
@@ -23,7 +22,6 @@ import {
   AlbumScreenNavigationProp,
   AlbumScreenRouteProp,
 } from '../types/RootStack';
-import AtelierTwist from '../components/BaroqueFilter/BaroqueFilter';
 import {
   AnimatedProp,
   Canvas,
@@ -112,6 +110,7 @@ const AlbumScreen: React.FC = () => {
   };
 
   const image1 = useImage(require('../assets/market2.jpg'));
+  const newPhotoImage = useImage(`file://${newPhoto?.path}`);
 
   const calculatedWidth = image1?.width() ?? screenWidth;
   const calculatedHeight = image1?.height() ?? screenHeight;
@@ -132,7 +131,6 @@ const AlbumScreen: React.FC = () => {
     useCallback(() => {
       // Runs when the screen comes into focus
       console.log('Screen is now focused!');
-      console.log('innerOffset', offsetY);
       setFramePath(
         calculateFramePath(imageWidth, imageHeight, offsetX, offsetY),
       );
@@ -162,14 +160,16 @@ const AlbumScreen: React.FC = () => {
   return (
     <SafeAreaView style={albumScreenStyles.container}>
       <View style={albumScreenStyles.imageContainer}>
-        {/* <AtelierTwist />  */}
         {isFiltered ? (
-          <PhotoFilter photo={image1} path={framePath} />
+          <PhotoFilter
+            photo={newPhoto === takeAPic ? image1 : newPhotoImage}
+            path={framePath}
+          />
         ) : (
           /* <PhotoFilter photo={newPhoto ?? takeAPic} /> */
           <Canvas style={albumScreenStyles.innerImage}>
             <Image
-              image={image1}
+              image={newPhotoImage ?? image1}
               // fit="contain"
               x={offsetX}
               y={offsetY}
