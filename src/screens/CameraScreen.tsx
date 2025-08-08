@@ -33,7 +33,7 @@ const CameraScreen: React.FC = () => {
 
     setPhotos(storedPhotos => [...storedPhotos, newPhotoWithID]);
     navigation.navigate('Album', {
-      newPhoto: photo,
+      newPhoto: photograph,
     });
   };
 
