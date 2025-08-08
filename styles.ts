@@ -5,10 +5,6 @@ const { width, height } = Dimensions.get('window');
 export const appStyles = StyleSheet.create({
   container: {
     flex: 1,
-    width: width,
-    height: height,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#fff',
   },
   imageContainer: {
