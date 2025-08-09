@@ -26,12 +26,12 @@ import { PhotoFilterProps } from '../../types/PhotoFilter';
 import { photoFilterStyles } from './PhotoFilter.styles';
 import { useEffect, useMemo, useState } from 'react';
 import brushStrokes from '../../assets/brushstrokes';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 // function FilteredPhoto({ uri, width, height }) {
 export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo, path }) => {
-  console.log('isThereAPath?', path);
-
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+  const tabBarHeight = useBottomTabBarHeight();
 
   const [framePath, setFramePath] = useState<AnimatedProp<PathDef>>('');
   const [isReady, setIsReady] = useState<boolean>(false);
@@ -63,7 +63,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo, path }) => {
 
   // Optional: center the image
   const offsetX = (screenWidth - imageWidth) / 2;
-  const offsetY = (screenHeight * 0.8 - imageHeight) / 2;
+  const offsetY = ((screenHeight - tabBarHeight) * 0.8 - imageHeight) / 2;
   const temp = photo;
   console.log('temp', temp);
 
@@ -79,7 +79,7 @@ export const PhotoFilter: React.FC<PhotoFilterProps> = ({ photo, path }) => {
       </View>
     );
   }
-  console.log('PHOTOOffset', offsetY);
+
   if (!allAssetsLoaded) {
     return (
       <Canvas style={photoFilterStyles.imageContainer}>
