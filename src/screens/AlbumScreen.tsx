@@ -30,6 +30,7 @@ import {
   useImage,
 } from '@shopify/react-native-skia';
 import { calculateFramePath } from '../utils/createFramePath';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 const AlbumScreen: React.FC = () => {
   const takeAPic: PhotoFile | (() => PhotoFile) = {
@@ -44,6 +45,7 @@ const AlbumScreen: React.FC = () => {
   const navigation = useNavigation<AlbumScreenNavigationProp>();
   const route = useRoute<AlbumScreenRouteProp>();
   const { newPhoto } = route?.params ?? takeAPic;
+  const tabBarHeight = useBottomTabBarHeight();
 
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
@@ -125,7 +127,7 @@ const AlbumScreen: React.FC = () => {
 
   // Optional: center the image
   const offsetX = (screenWidth - imageWidth) / 2;
-  const offsetY = (screenHeight * 0.8 - imageHeight) / 2;
+  const offsetY = ((screenHeight - tabBarHeight) * 0.8 - imageHeight) / 2;
 
   useFocusEffect(
     useCallback(() => {
@@ -170,7 +172,6 @@ const AlbumScreen: React.FC = () => {
           <Canvas style={albumScreenStyles.innerImage}>
             <Image
               image={newPhotoImage ?? image1}
-              // fit="contain"
               x={offsetX}
               y={offsetY}
               width={imageWidth}
@@ -178,17 +179,6 @@ const AlbumScreen: React.FC = () => {
             />
           </Canvas>
         )}
-        {/* <Image
-              source={
-                !photo
-                  ? {
-                      uri: `file://${photo.path}`,
-                    }
-                  : require('../assets/PhotoBooth.png')
-              }
-              style={albumScreenStyles.fullImage}
-              resizeMode="cover"
-            /> */}
       </View>
       <View style={albumScreenStyles.bottomButtons}>
         <Button
