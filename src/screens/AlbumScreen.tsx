@@ -7,11 +7,9 @@ import {
   Dimensions,
 } from 'react-native';
 import { PhotoFilter } from '../components/PhotoFilter/PhotoFilter';
-import ImageScroller from '../components/ImageScroller/ImageScroller';
 import { albumScreenStyles } from './AlbumScreen.styles';
 import { PhotoFile } from 'react-native-vision-camera';
 import { useCallback, useRef, useState } from 'react';
-import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import { PhotoFileWithID } from '../types/PhotoFileWithID';
 import {
   useFocusEffect,
@@ -32,6 +30,8 @@ import {
 import { calculateFramePath } from '../utils/createFramePath';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { PhotoFilterRef } from '../types/PhotoFilter';
+import { CameraRoll } from '@react-native-camera-roll/camera-roll';
+import RNFS from 'react-native-fs';
 
 const AlbumScreen: React.FC = () => {
   const takeAPic: PhotoFile | (() => PhotoFile) = {
@@ -116,7 +116,13 @@ const AlbumScreen: React.FC = () => {
   // };
 
   const handleSave = async () => {
-    photoFilterRef.current?.save();
+    if (isFiltered) {
+      photoFilterRef.current?.save();
+    } else {
+      console.log('save called');
+
+      await CameraRoll.saveAsset(newPhoto.path, { type: 'photo' });
+    }
   };
 
   const image1 = useImage(require('../assets/market2.jpg'));
@@ -170,11 +176,10 @@ const AlbumScreen: React.FC = () => {
           <PhotoFilter
             ref={photoFilterRef}
             onSave={handleSave}
-            photo={newPhoto === takeAPic ? image1 : newPhotoImage}
+            photo={newPhotoImage ?? image1}
             path={framePath}
           />
         ) : (
-          /* <PhotoFilter photo={newPhoto ?? takeAPic} /> */
           <Canvas style={albumScreenStyles.innerImage}>
             <Image
               image={newPhotoImage ?? image1}
@@ -213,14 +218,6 @@ const AlbumScreen: React.FC = () => {
 };
 
 export default AlbumScreen;
-
-// const handlePassPhotos = (photograph: PhotoFile) => {
-//   setPhoto(photograph);
-
-//   const newPhotoWithID: PhotoFileWithID = {
-//     ...photograph,
-//     id: (photos.length + 1).toString(),
-//   };
 
 //   setPhotos(storedPhotos => [...storedPhotos, newPhotoWithID]);
 // };
