@@ -1,7 +1,11 @@
 import { AnimatedProp, PathDef, SkImage } from "@shopify/react-native-skia";
-import { PhotoFile } from "react-native-vision-camera";
+
+export interface PhotoFilterRef {
+  save: () => void;
+}
 
 export interface PhotoFilterProps {
+  onSave?: (skImage: SkImage) => void;
   photo?: SkImage | null;
   path?: AnimatedProp<PathDef>;
 }
