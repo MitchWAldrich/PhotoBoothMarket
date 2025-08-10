@@ -10,7 +10,7 @@ import { PhotoFilter } from '../components/PhotoFilter/PhotoFilter';
 import ImageScroller from '../components/ImageScroller/ImageScroller';
 import { albumScreenStyles } from './AlbumScreen.styles';
 import { PhotoFile } from 'react-native-vision-camera';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import { PhotoFileWithID } from '../types/PhotoFileWithID';
 import {
@@ -31,6 +31,7 @@ import {
 } from '@shopify/react-native-skia';
 import { calculateFramePath } from '../utils/createFramePath';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { PhotoFilterRef } from '../types/PhotoFilter';
 
 const AlbumScreen: React.FC = () => {
   const takeAPic: PhotoFile | (() => PhotoFile) = {
@@ -103,12 +104,19 @@ const AlbumScreen: React.FC = () => {
     return await getRequestPermissionPromise();
   };
 
-  const savePicture = async () => {
-    if (Platform.OS === 'android' && !(await hasAndroidPermission())) {
-      return;
-    }
+  const photoFilterRef = useRef<PhotoFilterRef>(null);
 
-    if (photo) CameraRoll.saveAsset(photo.path);
+  // const handleSaveUnfiltered = async () => {
+  //   // await CameraRoll.saveAsset(`file://${file.path}`, {
+  //   //     type: 'photo',
+  //   //   });
+  //   // console.log('savedPhoto?', photoFilterRef);
+  //   console.log('saveClicked', photoFilterRef);
+  //   photoFilterRef.current?.save();
+  // };
+
+  const handleSave = async () => {
+    photoFilterRef.current?.save();
   };
 
   const image1 = useImage(require('../assets/market2.jpg'));
@@ -155,15 +163,13 @@ const AlbumScreen: React.FC = () => {
     setIsLoading(true);
   };
 
-  const getLoading = () => {
-    setIsLoading(false);
-  };
-
   return (
     <SafeAreaView style={albumScreenStyles.container}>
       <View style={albumScreenStyles.imageContainer}>
         {isFiltered ? (
           <PhotoFilter
+            ref={photoFilterRef}
+            onSave={handleSave}
             photo={newPhoto === takeAPic ? image1 : newPhotoImage}
             path={framePath}
           />
@@ -192,7 +198,7 @@ const AlbumScreen: React.FC = () => {
           accessibilityLabel="This button applies an Opera Atelier style filter to your photo"
         />
         <Button
-          onPress={savePicture}
+          onPress={handleSave}
           title="Save Photo"
           color="teal"
           accessibilityLabel="This button saves the photo to your camera roll."
