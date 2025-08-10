@@ -10,6 +10,7 @@ import { PhotoFilter } from '../components/PhotoFilter/PhotoFilter';
 import { albumScreenStyles } from './AlbumScreen.styles';
 import { PhotoFile } from 'react-native-vision-camera';
 import { useCallback, useRef, useState } from 'react';
+import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import { PhotoFileWithID } from '../types/PhotoFileWithID';
 import {
   useFocusEffect,
@@ -30,8 +31,6 @@ import {
 import { calculateFramePath } from '../utils/createFramePath';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { PhotoFilterRef } from '../types/PhotoFilter';
-import { CameraRoll } from '@react-native-camera-roll/camera-roll';
-import RNFS from 'react-native-fs';
 
 const AlbumScreen: React.FC = () => {
   const takeAPic: PhotoFile | (() => PhotoFile) = {
@@ -106,15 +105,6 @@ const AlbumScreen: React.FC = () => {
 
   const photoFilterRef = useRef<PhotoFilterRef>(null);
 
-  // const handleSaveUnfiltered = async () => {
-  //   // await CameraRoll.saveAsset(`file://${file.path}`, {
-  //   //     type: 'photo',
-  //   //   });
-  //   // console.log('savedPhoto?', photoFilterRef);
-  //   console.log('saveClicked', photoFilterRef);
-  //   photoFilterRef.current?.save();
-  // };
-
   const handleSave = async () => {
     if (isFiltered) {
       photoFilterRef.current?.save();
@@ -127,13 +117,20 @@ const AlbumScreen: React.FC = () => {
 
   const image1 = useImage(require('../assets/market2.jpg'));
   const newPhotoImage = useImage(`file://${newPhoto?.path}`);
+  const newPhotoOrientation = newPhoto.orientation;
 
-  const calculatedWidth = image1?.width() ?? screenWidth;
-  const calculatedHeight = image1?.height() ?? screenHeight;
+  const calculatedWidth = newPhotoImage?.width() ?? screenWidth;
+  const calculatedHeight = newPhotoImage?.height() ?? screenHeight;
 
   // Calculate scale to fit screen
-  const scaleX = (screenWidth * 0.95) / calculatedWidth;
-  const scaleY = (screenHeight * 0.8) / calculatedHeight;
+  const scaleX =
+    (newPhotoOrientation === 'portrait'
+      ? screenWidth * 0.95
+      : screenWidth * 0.8) / calculatedWidth;
+  const scaleY =
+    (newPhotoOrientation === 'portrait'
+      ? screenHeight * 0.8
+      : screenHeight * 0.95) / calculatedHeight;
   const scale = Math.min(scaleX, scaleY); // To maintain aspect ratio
 
   const imageWidth = calculatedWidth * scale;
@@ -176,6 +173,7 @@ const AlbumScreen: React.FC = () => {
           <PhotoFilter
             ref={photoFilterRef}
             onSave={handleSave}
+            orientation={newPhotoOrientation ?? 'portrait'}
             photo={newPhotoImage ?? image1}
             path={framePath}
           />
