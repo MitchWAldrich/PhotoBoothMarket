@@ -27,12 +27,7 @@ const takeAPic: PhotoFile | (() => PhotoFile) = {
   isMirrored: false,
 };
 
-const CameraComponent: React.FC<CameraComponentProps> = ({
-  passPhoto,
-  pressed,
-}) => {
-  const navigation = useNavigation<CameraScreenNavigationProp>();
-
+const CameraComponent: React.FC<CameraComponentProps> = ({ passPhoto }) => {
   //Likely store this permanently in user profile
   const [cameraPermission, setCameraPermission] =
     useState<CameraPermissionRequestResult>();
@@ -61,7 +56,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
 
   if (device == null) return <Text>Loading...</Text>;
   // if (device == null) return <NoCameraErrorView />
-  console.log('Current?', camera.current);
+
   const takePhoto = async () => {
     if (camera.current) {
       try {
