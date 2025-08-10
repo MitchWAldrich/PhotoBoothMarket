@@ -6,6 +6,7 @@ export interface PhotoFilterRef {
 
 export interface PhotoFilterProps {
   onSave?: (skImage: SkImage) => void;
+  orientation?: 'portrait' | 'landscape';
   photo?: SkImage | null;
   path?: AnimatedProp<PathDef>;
 }
