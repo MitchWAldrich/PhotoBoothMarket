@@ -13,6 +13,9 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import { BottomTabs } from './src/components/BottomTabs/BottomTabs';
 import { appStyles } from './styles';
+import { Buffer } from 'buffer';
+
+global.Buffer = Buffer;
 
 function App() {
   // const isDarkMode = useColorScheme() === 'dark';
