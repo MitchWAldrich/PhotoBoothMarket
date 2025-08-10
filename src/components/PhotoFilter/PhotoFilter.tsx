@@ -32,7 +32,7 @@ import { Buffer } from 'buffer';
 
 // function FilteredPhoto({ uri, width, height }) {
 export const PhotoFilter = forwardRef<PhotoFilterRef, PhotoFilterProps>(
-  ({ photo, path }, ref) => {
+  ({ orientation, photo, path }, ref) => {
     const { width: screenWidth, height: screenHeight } =
       Dimensions.get('window');
     const tabBarHeight = useBottomTabBarHeight();
@@ -93,12 +93,18 @@ export const PhotoFilter = forwardRef<PhotoFilterRef, PhotoFilterProps>(
     }, [photo, texture]);
 
     if (!photo) return;
+    const temp = photo;
+
     const calculatedWidth = photo?.width() ?? 0;
     const calculatedHeight = photo?.height() ?? 0;
 
     // Calculate scale to fit screen
-    const scaleX = (screenWidth * 0.95) / calculatedWidth;
-    const scaleY = (screenHeight * 0.8) / calculatedHeight;
+    const scaleX =
+      (orientation === 'portrait' ? screenWidth * 0.95 : screenWidth * 0.8) /
+      calculatedWidth;
+    const scaleY =
+      (orientation === 'portrait' ? screenHeight * 0.8 : screenHeight * 0.95) /
+      calculatedHeight;
     const scale = Math.min(scaleX, scaleY); // To maintain aspect ratio
 
     const imageWidth = calculatedWidth * scale;
@@ -107,9 +113,6 @@ export const PhotoFilter = forwardRef<PhotoFilterRef, PhotoFilterProps>(
     // Optional: center the image
     const offsetX = (screenWidth - imageWidth) / 2;
     const offsetY = ((screenHeight - tabBarHeight) * 0.8 - imageHeight) / 2;
-    const temp = photo;
-    console.log('temp', temp);
-
     const allAssetsLoaded = photo && texture && path;
 
     // Create the RuntimeEffect
@@ -137,8 +140,6 @@ export const PhotoFilter = forwardRef<PhotoFilterRef, PhotoFilterProps>(
         </Canvas>
       );
     }
-
-    const border = 26;
 
     return (
       <>
