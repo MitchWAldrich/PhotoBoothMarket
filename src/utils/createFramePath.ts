@@ -47,85 +47,81 @@ export const calculateFramePath = (
 
     const middle1 = middle * firstPercent;
     const middle2 = middle * secondPercent;
-
+console.log('offY', offY, corner);
     return `
-   M ${offX} ${offY}
-    C ${corner1} ${upperTopCurveCoord}, ${(
-      frameWidthNum *
-      cornerCurve *
-      secondPercent
-    ).toString()} ${upperTopCurveCoord}, ${corner.toString()} ${offY}
-    C ${(corner + small2).toString()} ${lowerTopCurveCoord}, ${(
-      corner + small1
-    ).toString()} ${lowerTopCurveCoord}, ${(corner + small).toString()} ${offY} 
-    C ${(corner + small + medium1).toString()} ${lowerTopCurveCoord}, ${(
-      corner +
+   M ${offX.toString()} ${offY.toString()}
+    C ${corner1.toString()} ${upperTopCurveCoord}, ${corner2.toString()} ${upperTopCurveCoord}, ${(offX + corner).toString()} ${offY.toString()}
+    C ${(offX + corner + small2).toString()} ${lowerTopCurveCoord}, ${(
+      offX + corner + small1
+    ).toString()} ${lowerTopCurveCoord}, ${(offX + corner + small).toString()} ${offY.toString()} 
+    C ${(offX + corner + small + medium1).toString()} ${lowerTopCurveCoord}, ${(
+      offX + corner +
       small +
       medium2
     ).toString()} ${lowerTopCurveCoord}, ${(
-      corner +
+      offX + corner +
       small +
       medium
-    ).toString()}  ${offY}
+    ).toString()}  ${offY.toString()}
     C ${(
-      corner +
+      offX + corner +
       small +
       medium +
       small1
     ).toString()}  ${lowerTopCurveCoord}, ${(
-      corner +
+      offX + corner +
       small +
       medium +
       small2
     ).toString()}  ${lowerTopCurveCoord}, ${(
-      corner +
+      offX + corner +
       small +
       medium +
       small
-    ).toString()}  ${offY} 
+    ).toString()}  ${offY.toString()} 
     C ${(
-      corner +
+      offX + corner +
       small +
       medium +
       small +
       middle1
     ).toString()} ${upperTopCurveCoord}, ${(
-      corner +
+      offX + corner +
       small +
       medium +
       small +
       middle2
     ).toString()} ${upperTopCurveCoord}, ${(
-      corner +
+      offX + corner +
       small +
       medium +
       small +
       middle
-    ).toString()}  ${offY}
+    ).toString()}  ${offY.toString()}
     C ${(
-      corner +
+      offX + corner +
       small +
       medium +
       small +
       middle +
       small1
     ).toString()} ${lowerTopCurveCoord}, ${(
-      corner +
+      offX + corner +
       small +
       medium +
       small +
       middle +
       small2
     ).toString()} ${lowerTopCurveCoord}, ${(
-      corner +
+      offX + corner +
       small +
       medium +
       small +
       middle +
       small
-    ).toString()} ${offY}
+    ).toString()} ${offY.toString()}
     C ${(
-      corner +
+      offX + corner +
       small +
       medium +
       small +
@@ -133,7 +129,7 @@ export const calculateFramePath = (
       small +
       medium1
     ).toString()}  ${lowerTopCurveCoord}, ${(
-      corner +
+      offX + corner +
       small +
       medium +
       small +
@@ -141,16 +137,16 @@ export const calculateFramePath = (
       small +
       medium2
     ).toString()}  ${lowerTopCurveCoord}, ${(
-      corner +
+      offX + corner +
       small +
       medium +
       small +
       middle +
       small +
       medium
-    ).toString()}  ${offY}
+    ).toString()}  ${offY.toString()}
     C ${(
-      corner +
+      offX + corner +
       small +
       medium +
       small +
@@ -159,7 +155,7 @@ export const calculateFramePath = (
       medium +
       small1
     ).toString()}  ${lowerTopCurveCoord}, ${(
-      corner +
+      offX + corner +
       small +
       medium +
       small +
@@ -168,7 +164,7 @@ export const calculateFramePath = (
       medium +
       small2
     ).toString()}  ${lowerTopCurveCoord}, ${(
-      corner +
+      offX + corner +
       small +
       medium +
       small +
@@ -176,9 +172,9 @@ export const calculateFramePath = (
       small +
       medium +
       small
-    ).toString()}  ${offY}
+    ).toString()}  ${offY.toString()}
     C ${(
-      corner +
+      offX + corner +
       small +
       medium +
       small +
@@ -188,7 +184,7 @@ export const calculateFramePath = (
       small +
       corner1
     ).toString()} ${upperTopCurveCoord}, ${(
-      corner +
+      offX + corner +
       small +
       medium +
       small +
@@ -197,7 +193,16 @@ export const calculateFramePath = (
       medium +
       small +
       corner2
-    ).toString()} ${upperTopCurveCoord}, ${(width + offX).toString()} ${offY}
+    ).toString()} ${upperTopCurveCoord}, ${(
+      offX + corner +
+      small +
+      medium +
+      small +
+      middle +
+      small +
+      medium +
+      small + corner
+    ).toString()} ${offY.toString()}
     
   
     C ${outerRightCurveCoord} ${(
