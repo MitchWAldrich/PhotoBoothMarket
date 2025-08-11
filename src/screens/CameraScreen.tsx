@@ -4,8 +4,11 @@ import { cameraScreenStyles } from './CameraScreen.styles';
 import { PhotoFile } from 'react-native-vision-camera';
 import { useState } from 'react';
 import { PhotoFileWithID } from '../types/PhotoFileWithID';
-import { useNavigation } from '@react-navigation/native';
-import { CameraScreenNavigationProp } from '../types/RootStack';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  CameraScreenNavigationProp,
+  CameraScreenRouteProp,
+} from '../types/RootStack';
 
 const CameraScreen: React.FC = () => {
   const takeAPic: PhotoFile | (() => PhotoFile) = {
@@ -18,6 +21,9 @@ const CameraScreen: React.FC = () => {
   };
 
   const navigation = useNavigation<CameraScreenNavigationProp>();
+  const route = useRoute<CameraScreenRouteProp>();
+
+  const { name, email, event, isPastAudience } = route?.params;
 
   const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false);
   const [photo, setPhoto] = useState<PhotoFile>(takeAPic);
