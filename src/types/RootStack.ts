@@ -4,10 +4,16 @@ import { PhotoFile } from "react-native-vision-camera";
 
 export type RootStackParamList = {
   Home: undefined;
-  Camera: undefined;
-  Album: { newPhoto: PhotoFile} | undefined;
+  Camera: {
+    name: string;
+    email: string;
+    event: string;
+    isPastAudience: boolean;
+   } | undefined;
+  Album: { newPhoto: PhotoFile } | undefined;
 };
 
 export type CameraScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Camera'>;
-export type AlbumScreenRouteProp = RouteProp<RootStackParamList, 'Album'>;
+export type CameraScreenRouteProp = RouteProp<RootStackParamList, 'Camera'>;
 export type AlbumScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Album'>;
+export type AlbumScreenRouteProp = RouteProp<RootStackParamList, 'Album'>;
