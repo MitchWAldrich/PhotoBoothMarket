@@ -28,6 +28,9 @@ export const homeScreenStyles = StyleSheet.create({
     backgroundColor: '#fff',
     fontSize: 16,
   },
+  submit: {
+    marginTop: 20,
+  },
   title: {
     fontSize: 24,
     fontWeight: '600',
