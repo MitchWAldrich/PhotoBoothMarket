@@ -11,7 +11,7 @@ import { homeScreenStyles } from './HomeScreen.styles';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../types/RootStack';
+import { CameraScreenRouteProp, RootStackParamList } from '../types/RootStack';
 import axios from 'axios';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
@@ -66,6 +66,13 @@ const HomeScreen: React.FC = () => {
       .catch(err => {
         console.error('POST error:', err);
       });
+
+    navigation.navigate('Camera', {
+      name: client,
+      email: clientEmail,
+      event: event,
+      isPastAudience,
+    });
   };
 
   const isDarkMode = useColorScheme() === 'dark';
@@ -104,19 +111,20 @@ const HomeScreen: React.FC = () => {
           accessibilityLabel="Click to confirm that you have not seen an Opera Atelier show before"
         />
       </View>
-      <Text style={homeScreenStyles.title}>Ready to submit?</Text>
-      <Button
-        onPress={handlePostRequest}
-        title="Submit"
-        color="#841584"
-        accessibilityLabel="This button sends client data to the back end"
-      />
-      {postResponse !== '' && (
-        <>
-          <Text style={homeScreenStyles.title}>Response from POST:</Text>
-          <Text>{postResponse}</Text>
-        </>
-      )}
+      <View style={homeScreenStyles.submit}>
+        <Button
+          onPress={handlePostRequest}
+          title="Submit & Take Photo"
+          color="#841584"
+          accessibilityLabel="This button sends client data to the back end"
+        />
+        {postResponse !== '' && (
+          <>
+            <Text style={homeScreenStyles.title}>Response from POST:</Text>
+            <Text>{postResponse}</Text>
+          </>
+        )}
+      </View>
 
       {/* <ImageScroller images={photos ?? mockPhotoFiles} />
        */}
