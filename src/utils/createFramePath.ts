@@ -47,7 +47,7 @@ export const calculateFramePath = (
 
     const middle1 = middle * firstPercent;
     const middle2 = middle * secondPercent;
-console.log('offY', offY, corner);
+
     return `
    M ${offX.toString()} ${offY.toString()}
     C ${corner1.toString()} ${upperTopCurveCoord}, ${corner2.toString()} ${upperTopCurveCoord}, ${(offX + corner).toString()} ${offY.toString()}
