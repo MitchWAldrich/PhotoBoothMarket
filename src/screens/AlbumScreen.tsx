@@ -31,6 +31,7 @@ import {
 import { calculateFramePath } from '../utils/createFramePath';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { PhotoFilterRef } from '../types/PhotoFilter';
+import axios from 'axios';
 
 const AlbumScreen: React.FC = () => {
   const takeAPic: PhotoFile | (() => PhotoFile) = {
@@ -44,7 +45,8 @@ const AlbumScreen: React.FC = () => {
 
   const navigation = useNavigation<AlbumScreenNavigationProp>();
   const route = useRoute<AlbumScreenRouteProp>();
-  const { newPhoto } = route?.params ?? takeAPic;
+  const { newPhoto, name, email, event, isPastAudience } =
+    route?.params ?? takeAPic;
   const tabBarHeight = useBottomTabBarHeight();
 
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
@@ -55,6 +57,8 @@ const AlbumScreen: React.FC = () => {
   const [isFiltered, setIsFiltered] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [framePath, setFramePath] = useState<AnimatedProp<PathDef>>('');
+
+  const photoFilterRef = useRef<PhotoFilterRef>(null);
 
   const hasAndroidPermission = async () => {
     const getCheckPermissionPromise = () => {
@@ -103,7 +107,72 @@ const AlbumScreen: React.FC = () => {
     return await getRequestPermissionPromise();
   };
 
-  const photoFilterRef = useRef<PhotoFilterRef>(null);
+  const newPhotoImage = useImage(`file://${newPhoto?.path}`);
+
+  const handleUpdateUserWithImage = async () => {
+    axios
+      .post('http://10.0.2.2:3000/client-info', {
+        name,
+        email,
+        event,
+        isPastAudience,
+        originalImage: newPhotoImage,
+        baroqueImage: photoFilterRef.current,
+      })
+      .then(res => {
+        console.log(res.data.response || 'POST success!');
+      })
+      .catch(err => {
+        console.error('POST error:', err);
+      });
+
+    //   try {
+    //     // 1. Fetch the user (e.g., by email or ID)
+    //     const getUserResponse = await axios.get(
+    //       `http://10.0.2.2:3000/client-info`,
+    //       {
+    //         params: { email: email }, // or any identifier
+    //       },
+    //     );
+
+    //     const user = getUserResponse.data;
+
+    //     if (!user || !user.id) {
+    //       console.warn('User not found');
+    //       return;
+    //     }
+
+    //     // 2. Prepare FormData to update the user with the image
+    //     const formData = new FormData();
+    //     formData.append('name', client);
+    //     formData.append('event', event);
+    //     formData.append('isPastAudience', isPastAudience);
+
+    //     // Append the image
+    //     formData.append('image', {
+    //       uri: imageUri, // from image picker
+    //       name: 'profile.jpg',
+    //       type: 'image/jpeg',
+    //     });
+
+    //     // 3. Send PUT or PATCH request to update the user
+    //     const updateResponse = await axios.put(
+    //       `http://10.0.2.2:3000/client-info/${user.id}`, // assuming RESTful route
+    //       formData,
+    //       {
+    //         headers: {
+    //           'Content-Type': 'multipart/form-data',
+    //         },
+    //       },
+    //     );
+
+    //     setPostResponse(
+    //       updateResponse.data.response || 'User updated successfully!',
+    //     );
+    //   } catch (error) {
+    //     console.error('Update error:', error);
+    //   }
+  };
 
   const handleSave = async () => {
     if (isFiltered) {
@@ -116,8 +185,7 @@ const AlbumScreen: React.FC = () => {
   };
 
   const image1 = useImage(require('../assets/market2.jpg'));
-  const newPhotoImage = useImage(`file://${newPhoto?.path}`);
-  const newPhotoOrientation = newPhoto.orientation;
+  const newPhotoOrientation = newPhoto?.orientation ?? 'portrait';
 
   const calculatedWidth = newPhotoImage?.width() ?? screenWidth;
   const calculatedHeight = newPhotoImage?.height() ?? screenHeight;
