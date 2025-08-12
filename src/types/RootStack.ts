@@ -10,7 +10,12 @@ export type RootStackParamList = {
     event: string;
     isPastAudience: boolean;
    } | undefined;
-  Album: { newPhoto: PhotoFile } | undefined;
+  Album: { newPhoto: PhotoFile;
+    name: string;
+    email: string;
+    event: string;
+    isPastAudience: boolean;
+   } | undefined;
 };
 
 export type CameraScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Camera'>;
