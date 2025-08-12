@@ -14,6 +14,10 @@ export const albumScreenStyles = StyleSheet.create({
     flex: 8,
     backgroundColor: 'red',
   },
+  innerButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  }, 
   innerImage: {
     flex: 1,
     width: '100%',
@@ -23,6 +27,16 @@ export const albumScreenStyles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  spacerHeight: {
+    height: 8,
+  },
+  spacerWidth: {
+    width: 12,
+  },
+  stackedInnerButtons: {
+    alignItems: 'center',
+    padding: 10,
+  }, 
   title: {
     fontSize: 24,
     fontWeight: '600',
