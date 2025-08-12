@@ -5,6 +5,7 @@ import {
   Platform,
   PermissionsAndroid,
   Dimensions,
+  Alert,
 } from 'react-native';
 import { PhotoFilter } from '../components/PhotoFilter/PhotoFilter';
 import { albumScreenStyles } from './AlbumScreen.styles';
@@ -32,6 +33,7 @@ import { calculateFramePath } from '../utils/createFramePath';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { PhotoFilterRef } from '../types/PhotoFilter';
 import axios from 'axios';
+import UserFields from '../components/UserFields/UserFields';
 
 const AlbumScreen: React.FC = () => {
   const takeAPic: PhotoFile | (() => PhotoFile) = {
@@ -45,14 +47,53 @@ const AlbumScreen: React.FC = () => {
 
   const navigation = useNavigation<AlbumScreenNavigationProp>();
   const route = useRoute<AlbumScreenRouteProp>();
-  const { newPhoto, name, email, event, isPastAudience } =
-    route?.params ?? takeAPic;
+
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(
+    route.params &&
+      (route.params.name !== 'backup' ||
+        route.params.email !== 'backup@email.com')
+      ? false
+      : true,
+  );
+
+  const [userName, setUserName] = useState<string>(route?.params?.name ?? '');
+  const [userEmail, setUserEmail] = useState<string>(
+    route?.params?.email ?? '',
+  );
+  const [userEvent, setUserEvent] = useState<string>(
+    route?.params?.event ?? '',
+  );
+  const [userIsPastAudience, setUserIsPastAUdience] = useState<boolean>(
+    route?.params?.isPastAudience ?? false,
+  );
+
+  const getUserValues = (
+    name: string,
+    email: string,
+    event: string,
+    isPastAudience: boolean,
+  ) => {
+    console.log('callbackReceived');
+    setUserName(name);
+    setUserEmail(email);
+    setUserEvent(event);
+    setUserIsPastAUdience(isPastAudience);
+    setIsModalVisible(false);
+  };
+
+  // const newPhoto = route?.params?.newPhoto
+
+  // const { newPhoto, name, email, event, isPastAudience } =
+  //   route?.params ?? takeAPic;
+
   const tabBarHeight = useBottomTabBarHeight();
 
   const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
   const [isButtonPressed, setIsButtonPressed] = useState<boolean>(false);
-  const [photo, setPhoto] = useState<PhotoFile>(takeAPic);
+  const [newPhoto, setNewPhoto] = useState<PhotoFile>(
+    route?.params?.newPhoto ?? takeAPic,
+  );
   const [photos, setPhotos] = useState<PhotoFileWithID[]>([]);
   const [isFiltered, setIsFiltered] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -109,13 +150,25 @@ const AlbumScreen: React.FC = () => {
 
   const newPhotoImage = useImage(`file://${newPhoto?.path}`);
 
-  const handleUpdateUserWithImage = async () => {
+  const handleCreateUserWithImage = async () => {
+    if (
+      !userName.trim() ||
+      !userEmail.trim() ||
+      !userEvent.trim() ||
+      userIsPastAudience ||
+      newPhotoImage ||
+      photoFilterRef.current
+    ) {
+      Alert.alert('Missing Information', 'Please fill in all required fields.');
+      return;
+    }
+
     axios
       .post('http://10.0.2.2:3000/client-info', {
-        name,
-        email,
-        event,
-        isPastAudience,
+        name: userName,
+        email: userEmail,
+        event: userEvent,
+        isPastAudience: userIsPastAudience,
         originalImage: newPhotoImage,
         baroqueImage: photoFilterRef.current,
       })
@@ -174,13 +227,15 @@ const AlbumScreen: React.FC = () => {
     //   }
   };
 
-  const handleSave = async () => {
+  const handleSaveUnfiltered = async () => {
+    console.log('Saved to Camera Roll');
+
+    await CameraRoll.saveAsset(newPhoto.path, { type: 'photo' });
+  };
+
+  const handleSaveFiltered = async () => {
     if (isFiltered) {
       photoFilterRef.current?.save();
-    } else {
-      console.log('save called');
-
-      await CameraRoll.saveAsset(newPhoto.path, { type: 'photo' });
     }
   };
 
@@ -225,6 +280,8 @@ const AlbumScreen: React.FC = () => {
 
   if (!image1) return null;
 
+  const handleOpenUserFields = () => {};
+
   const handleToggleCamera = (openState: boolean) => {
     setIsButtonPressed(openState);
   };
@@ -236,11 +293,12 @@ const AlbumScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={albumScreenStyles.container}>
+      <UserFields callback={getUserValues} modalVisibility={isModalVisible} />
       <View style={albumScreenStyles.imageContainer}>
         {isFiltered ? (
           <PhotoFilter
             ref={photoFilterRef}
-            onSave={handleSave}
+            onSave={handleSaveFiltered}
             orientation={newPhotoOrientation ?? 'portrait'}
             photo={newPhotoImage ?? image1}
             path={framePath}
@@ -268,16 +326,37 @@ const AlbumScreen: React.FC = () => {
           color="gold"
           accessibilityLabel="This button applies an Opera Atelier style filter to your photo"
         />
-        <Button
-          onPress={handleSave}
-          title="Save Photo"
-          color="teal"
-          accessibilityLabel="This button saves the photo to your camera roll."
-        />
-        <Button
-          title="Take another picture"
-          onPress={() => navigation.navigate('Camera')}
-        />
+        <View style={albumScreenStyles.innerButtons}>
+          <View style={albumScreenStyles.stackedInnerButtons}>
+            <Button
+              onPress={handleSaveFiltered}
+              title="Save Original"
+              color="teal"
+              accessibilityLabel="This button saves the filtered photo to your camera roll."
+            />
+            <View style={albumScreenStyles.spacerHeight} />
+            <Button
+              onPress={handleSaveUnfiltered}
+              title="Save Filtered"
+              color="teal"
+              accessibilityLabel="This button saves the original photo to your camera roll."
+            />
+          </View>
+          <Button
+            onPress={handleCreateUserWithImage}
+            title="Save to Database"
+            color="teal"
+            accessibilityLabel="This button saves the original photo to your camera roll."
+          />
+        </View>
+        <View style={albumScreenStyles.innerButtons}>
+          <Button
+            title="Take another picture"
+            onPress={() => navigation.navigate('Camera')}
+          />
+          <View style={albumScreenStyles.spacerWidth} />
+          <Button title="Get user details" onPress={handleOpenUserFields} />
+        </View>
       </View>
     </SafeAreaView>
   );
