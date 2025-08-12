@@ -11,8 +11,7 @@ import { homeScreenStyles } from './HomeScreen.styles';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { CameraScreenRouteProp, RootStackParamList } from '../types/RootStack';
-import axios from 'axios';
+import { RootStackParamList } from '../types/RootStack';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -53,20 +52,6 @@ const HomeScreen: React.FC = () => {
   // }, [client, userMessage]);
 
   const handlePostRequest = () => {
-    axios
-      .post('http://10.0.2.2:3000/client-info', {
-        name: client,
-        email: clientEmail,
-        event: event,
-        isPastAudience,
-      })
-      .then(res => {
-        setPostResponse(res.data.response || 'POST success!');
-      })
-      .catch(err => {
-        console.error('POST error:', err);
-      });
-
     navigation.navigate('Camera', {
       name: client,
       email: clientEmail,
@@ -93,6 +78,13 @@ const HomeScreen: React.FC = () => {
         onChangeText={setClientEmail}
         value={clientEmail}
         placeholder="E-mail..."
+      />
+      <Text style={homeScreenStyles.title}>What is this event?</Text>
+      <TextInput
+        style={homeScreenStyles.input}
+        onChangeText={setEvent}
+        value={event}
+        placeholder="Name of Event"
       />
       <Text style={homeScreenStyles.title}>
         Have you seen an Opera Atelier Show before?
