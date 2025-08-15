@@ -66,6 +66,9 @@ const AlbumScreen: React.FC = () => {
   const [userIsPastAudience, setUserIsPastAUdience] = useState<boolean>(
     route?.params?.isPastAudience ?? false,
   );
+  const [hasImage, setHasImage] = useState<boolean>(
+    route?.params?.newPhoto ? true : false,
+  );
 
   const getUserValues = (
     name: string,
@@ -293,7 +296,11 @@ const AlbumScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={albumScreenStyles.container}>
-      <UserFields callback={getUserValues} modalVisibility={isModalVisible} />
+      <UserFields
+        callback={getUserValues}
+        hasImage={hasImage}
+        modalVisibility={isModalVisible}
+      />
       <View style={albumScreenStyles.imageContainer}>
         {isFiltered ? (
           <PhotoFilter
