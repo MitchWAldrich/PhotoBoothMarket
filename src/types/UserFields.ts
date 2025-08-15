@@ -5,5 +5,6 @@ export interface UserFieldsProps {
     event: string,
     isPastAudience: boolean,
   ) => void;
+  hasImage: boolean;
   modalVisibility: boolean;
 }
