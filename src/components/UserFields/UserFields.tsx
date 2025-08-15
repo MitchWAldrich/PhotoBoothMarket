@@ -2,22 +2,40 @@ import { Text, TextInput, Button, View, Modal } from 'react-native';
 import { useState } from 'react';
 import { UserFieldsProps } from '../../types/UserFields';
 import { userFieldsStyles } from './UserFields.styles';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../types/RootStack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+type UserFieldsModalNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'Camera'
+>;
 
 const UserFields: React.FC<UserFieldsProps> = ({
   callback,
+  hasImage,
   modalVisibility,
 }) => {
+  const navigation = useNavigation<UserFieldsModalNavigationProp>();
+
   const [client, setClient] = useState<string>('');
   const [clientEmail, setClientEmail] = useState<string>('');
   const [isPastAudience, setIsPastAudience] = useState<boolean>(false);
   const [event, setEvent] = useState<string>('Market Street');
   const [isModalVisible, setIsModalVisible] =
     useState<boolean>(modalVisibility);
+  const [hasTakenImage, setHasTakenImage] = useState<boolean>(hasImage);
 
   const handleSubmitUser = () => {
-    console.log('callbackClicked');
     callback(client, clientEmail, event, isPastAudience);
     setIsModalVisible(false);
+
+    navigation.navigate('Camera', {
+      name: client,
+      email: clientEmail,
+      event: event,
+      isPastAudience,
+    });
   };
 
   return (
@@ -69,12 +87,22 @@ const UserFields: React.FC<UserFieldsProps> = ({
               />
             </View>
             <View style={userFieldsStyles.submit}>
-              <Button
-                onPress={handleSubmitUser}
-                title={'Update Photographee'}
-                color="#841584"
-                accessibilityLabel="This button sends client data to the back end"
-              />
+              {hasImage && (
+                <Button
+                  onPress={handleSubmitUser}
+                  title={'Update Photographee'}
+                  color="#841584"
+                  accessibilityLabel="This button updates client data"
+                />
+              )}
+              {!hasImage && (
+                <Button
+                  onPress={handleSubmitUser}
+                  title={'Update Photographee and Take a Picture'}
+                  color="#841584"
+                  accessibilityLabel="This button updates client data then navigates to the camera tab"
+                />
+              )}
             </View>
           </View>
         </View>
