@@ -63,8 +63,8 @@ const AlbumScreen: React.FC = () => {
   const [userEvent, setUserEvent] = useState<string>(
     route?.params?.event ?? '',
   );
-  const [userIsPastAudience, setUserIsPastAUdience] = useState<boolean>(
-    route?.params?.isPastAudience ?? false,
+  const [userIsPastAudience, setUserIsPastAUdience] = useState<boolean | null>(
+    route?.params?.isPastAudience ?? null,
   );
   const [hasImage, setHasImage] = useState<boolean>(
     route?.params?.newPhoto ? true : false,
@@ -74,7 +74,7 @@ const AlbumScreen: React.FC = () => {
     name: string,
     email: string,
     event: string,
-    isPastAudience: boolean,
+    isPastAudience: boolean | null,
   ) => {
     console.log('callbackReceived');
     setUserName(name);
