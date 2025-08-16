@@ -2,6 +2,6 @@ export interface SubmitButtonProps {
   color1: string;
   color2: string;
   onPress: () => void;
-  pressed: boolean;
+  pressed?: boolean;
   title: string;
 };
