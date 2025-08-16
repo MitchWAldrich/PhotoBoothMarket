@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/RootStack';
+import CustomButton from '../components/Button/Button';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -26,6 +27,8 @@ const HomeScreen: React.FC = () => {
   const [clientEmail, setClientEmail] = useState<string>('');
   const [isPastAudience, setIsPastAudience] = useState<boolean>(false);
   const [event, setEvent] = useState<string>('Market Street');
+  const [isPressedYes, setIsPressedYes] = useState<boolean>(false);
+  const [isPressedNo, setIsPressedNo] = useState<boolean>(false);
 
   // useEffect(() => {
   //   axios
@@ -50,6 +53,14 @@ const HomeScreen: React.FC = () => {
   //       setPostResponse('POST failed. Check the console.');
   //     });
   // }, [client, userMessage]);
+
+  const handlePastAudience = (button: 'yes' | 'no') => {
+    if (button === 'yes') {
+      setIsPressedYes(prev => !prev); // toggle yes
+    } else {
+      setIsPressedNo(prev => !prev); // toggle no
+    }
+  };
 
   const handlePostRequest = () => {
     navigation.navigate('Camera', {
@@ -90,17 +101,19 @@ const HomeScreen: React.FC = () => {
         Have you seen an Opera Atelier Show before?
       </Text>
       <View style={homeScreenStyles.buttons}>
-        <Button
+        <CustomButton
           title="Yes"
-          onPress={() => setIsPastAudience(true)}
-          color="#841584"
-          accessibilityLabel="Click to confirm that you have seen an Opera Atelier show before"
+          onPress={() => handlePastAudience('yes')}
+          pressed={isPressedYes}
+          color1="#841584"
+          color2="#daa520"
         />
-        <Button
+        <CustomButton
           title="No"
-          onPress={() => setIsPastAudience(false)}
-          color="#841584"
-          accessibilityLabel="Click to confirm that you have not seen an Opera Atelier show before"
+          onPress={() => handlePastAudience('no')}
+          pressed={isPressedNo}
+          color1="#841584"
+          color2="#daa520"
         />
       </View>
       <View style={homeScreenStyles.submit}>
