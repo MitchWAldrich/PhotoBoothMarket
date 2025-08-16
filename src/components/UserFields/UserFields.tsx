@@ -1,4 +1,4 @@
-import { Text, TextInput, Button, View, Modal } from 'react-native';
+import { Text, TextInput, Button, View, Modal, Alert } from 'react-native';
 import { useState } from 'react';
 import { UserFieldsProps } from '../../types/UserFields';
 import { userFieldsStyles } from './UserFields.styles';
@@ -21,7 +21,7 @@ const UserFields: React.FC<UserFieldsProps> = ({
 
   const [client, setClient] = useState<string>('');
   const [clientEmail, setClientEmail] = useState<string>('');
-  const [isPastAudience, setIsPastAudience] = useState<boolean>(false);
+  const [isPastAudience, setIsPastAudience] = useState<boolean | null>(null);
   const [event, setEvent] = useState<string>('Market Street');
   const [isModalVisible, setIsModalVisible] =
     useState<boolean>(modalVisibility);
@@ -30,6 +30,16 @@ const UserFields: React.FC<UserFieldsProps> = ({
   const [isPressedYes, setIsPressedYes] = useState<boolean>(false);
 
   const handleSubmitUser = () => {
+    if (
+      !client.trim() ||
+      !clientEmail.trim() ||
+      !event.trim() ||
+      isPastAudience === null
+    ) {
+      Alert.alert('Missing Information', 'Please fill in all required fields.');
+      return;
+    }
+
     callback(client, clientEmail, event, isPastAudience);
     setIsModalVisible(false);
 
@@ -101,19 +111,19 @@ const UserFields: React.FC<UserFieldsProps> = ({
             </View>
             <View style={userFieldsStyles.submit}>
               {hasImage && (
-                <Button
+                <CustomButton
                   onPress={handleSubmitUser}
                   title={'Update Photographee'}
-                  color="#841584"
-                  accessibilityLabel="This button updates client data"
+                  color1="#841584"
+                  color2="#841584"
                 />
               )}
               {!hasImage && (
-                <Button
+                <CustomButton
                   onPress={handleSubmitUser}
                   title={'Update Photographee and Take a Picture'}
-                  color="#841584"
-                  accessibilityLabel="This button updates client data then navigates to the camera tab"
+                  color1="#841584"
+                  color2="#841584"
                 />
               )}
             </View>
