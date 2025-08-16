@@ -5,6 +5,7 @@ import { userFieldsStyles } from './UserFields.styles';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../types/RootStack';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import CustomButton from '../Button/Button';
 
 type UserFieldsModalNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -25,6 +26,8 @@ const UserFields: React.FC<UserFieldsProps> = ({
   const [isModalVisible, setIsModalVisible] =
     useState<boolean>(modalVisibility);
   const [hasTakenImage, setHasTakenImage] = useState<boolean>(hasImage);
+  const [isPressedNo, setIsPressedNo] = useState<boolean>(false);
+  const [isPressedYes, setIsPressedYes] = useState<boolean>(false);
 
   const handleSubmitUser = () => {
     callback(client, clientEmail, event, isPastAudience);
@@ -36,6 +39,14 @@ const UserFields: React.FC<UserFieldsProps> = ({
       event: event,
       isPastAudience,
     });
+  };
+
+  const handlePastAudience = (button: 'yes' | 'no') => {
+    if (button === 'yes') {
+      setIsPressedYes(prev => !prev); // toggle yes
+    } else {
+      setIsPressedNo(prev => !prev); // toggle no
+    }
   };
 
   return (
@@ -73,17 +84,19 @@ const UserFields: React.FC<UserFieldsProps> = ({
               Have you seen an Opera Atelier Show before?
             </Text>
             <View style={userFieldsStyles.buttons}>
-              <Button
+              <CustomButton
                 title="Yes"
-                onPress={() => setIsPastAudience(true)}
-                color="#841584"
-                accessibilityLabel="Click to confirm that you have seen an Opera Atelier show before"
+                onPress={() => handlePastAudience('yes')}
+                pressed={isPressedYes}
+                color1="#841584"
+                color2="#daa520"
               />
-              <Button
+              <CustomButton
                 title="No"
-                onPress={() => setIsPastAudience(false)}
-                color="#841584"
-                accessibilityLabel="Click to confirm that you have not seen an Opera Atelier show before"
+                onPress={() => handlePastAudience('no')}
+                pressed={isPressedNo}
+                color1="#841584"
+                color2="#daa520"
               />
             </View>
             <View style={userFieldsStyles.submit}>
