@@ -8,7 +8,7 @@ export type RootStackParamList = {
     name: string;
     email: string;
     event: string;
-    isPastAudience: boolean;
+    isPastAudience: boolean | null;
    } | undefined;
   Album: { newPhoto: PhotoFile;
     name: string;

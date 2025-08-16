@@ -3,7 +3,7 @@ export interface UserFieldsProps {
     name: string,
     email: string,
     event: string,
-    isPastAudience: boolean,
+    isPastAudience: boolean | null,
   ) => void;
   hasImage: boolean;
   modalVisibility: boolean;
