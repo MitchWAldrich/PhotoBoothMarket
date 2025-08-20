@@ -1,4 +1,4 @@
-import { Text, TextInput, Button, View, Modal, Alert } from 'react-native';
+import { Text, TextInput, View, Modal, Alert } from 'react-native';
 import { useState } from 'react';
 import { UserFieldsProps } from '../../types/UserFields';
 import { userFieldsStyles } from './UserFields.styles';
@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../types/RootStack';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import CustomButton from '../Button/Button';
+import Dropdown from '../DropDown/DropDown';
 
 type UserFieldsModalNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -19,6 +20,7 @@ const UserFields: React.FC<UserFieldsProps> = ({
 }) => {
   const navigation = useNavigation<UserFieldsModalNavigationProp>();
 
+  const [staffMember, setStaffMember] = useState<string>('');
   const [client, setClient] = useState<string>('');
   const [clientEmail, setClientEmail] = useState<string>('');
   const [isPastAudience, setIsPastAudience] = useState<boolean | null>(null);
@@ -40,10 +42,11 @@ const UserFields: React.FC<UserFieldsProps> = ({
       return;
     }
 
-    callback(client, clientEmail, event, isPastAudience);
+    callback(staffMember, client, clientEmail, event, isPastAudience);
     setIsModalVisible(false);
 
     navigation.navigate('Camera', {
+      staffMember: staffMember,
       name: client,
       email: clientEmail,
       event: event,
@@ -59,6 +62,11 @@ const UserFields: React.FC<UserFieldsProps> = ({
     }
   };
 
+  const handleDropdown = (val: string) => {
+    console.log('getValue', val);
+    setStaffMember(val);
+  };
+
   return (
     <View style={userFieldsStyles.container}>
       <Modal
@@ -69,6 +77,8 @@ const UserFields: React.FC<UserFieldsProps> = ({
       >
         <View style={userFieldsStyles.modalOverlay}>
           <View style={userFieldsStyles.modalContent}>
+            <Text style={userFieldsStyles.title}>Enter Staff Member Name:</Text>
+            <Dropdown onSelect={handleDropdown} />
             <Text style={userFieldsStyles.title}>Tell us your name:</Text>
             <TextInput
               style={userFieldsStyles.input}

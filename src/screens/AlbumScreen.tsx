@@ -56,6 +56,9 @@ const AlbumScreen: React.FC = () => {
       : true,
   );
 
+  const [staffName, setStaffName] = useState<string>(
+    route?.params?.staffMember ?? '',
+  );
   const [userName, setUserName] = useState<string>(route?.params?.name ?? '');
   const [userEmail, setUserEmail] = useState<string>(
     route?.params?.email ?? '',
@@ -71,12 +74,14 @@ const AlbumScreen: React.FC = () => {
   );
 
   const getUserValues = (
+    staffMember: string,
     name: string,
     email: string,
     event: string,
     isPastAudience: boolean | null,
   ) => {
     console.log('callbackReceived');
+    setStaffName(staffMember);
     setUserName(name);
     setUserEmail(email);
     setUserEvent(event);
@@ -155,6 +160,7 @@ const AlbumScreen: React.FC = () => {
 
   const handleCreateUserWithImage = async () => {
     if (
+      !staffName.trim() ||
       !userName.trim() ||
       !userEmail.trim() ||
       !userEvent.trim() ||
@@ -168,6 +174,7 @@ const AlbumScreen: React.FC = () => {
 
     axios
       .post('http://10.0.2.2:3000/client-info', {
+        staffMember: staffName,
         name: userName,
         email: userEmail,
         event: userEvent,
