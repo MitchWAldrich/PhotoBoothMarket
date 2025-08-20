@@ -1,5 +1,6 @@
 export interface UserFieldsProps {
   callback: (
+    staffName: string,
     name: string,
     email: string,
     event: string,

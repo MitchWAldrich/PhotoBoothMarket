@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/RootStack';
 import CustomButton from '../components/Button/Button';
+import Dropdown from '../components/DropDown/DropDown';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -27,6 +28,7 @@ const HomeScreen: React.FC = () => {
   const [clientEmail, setClientEmail] = useState<string>('');
   const [isPastAudience, setIsPastAudience] = useState<boolean>(false);
   const [event, setEvent] = useState<string>('Market Street');
+  const [staffMember, setStaffMember] = useState<string>('');
   const [isPressedYes, setIsPressedYes] = useState<boolean>(false);
   const [isPressedNo, setIsPressedNo] = useState<boolean>(false);
 
@@ -64,6 +66,7 @@ const HomeScreen: React.FC = () => {
 
   const handlePostRequest = () => {
     navigation.navigate('Camera', {
+      staffMember: staffMember,
       name: client,
       email: clientEmail,
       event: event,
@@ -73,9 +76,16 @@ const HomeScreen: React.FC = () => {
 
   const isDarkMode = useColorScheme() === 'dark';
 
+  const handleDropdown = (val: string) => {
+    console.log('getValue', val);
+    setStaffMember(val);
+  };
+
   return (
     <SafeAreaView style={homeScreenStyles.container}>
       <Text style={homeScreenStyles.title}>{event} Photobooth</Text>
+      <Text style={homeScreenStyles.title}>Enter Staff Member Name:</Text>
+      <Dropdown onSelect={handleDropdown} />
       <Text style={homeScreenStyles.title}>Tell us your name:</Text>
       <TextInput
         style={homeScreenStyles.input}
