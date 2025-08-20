@@ -23,7 +23,8 @@ const CameraScreen: React.FC = () => {
   const navigation = useNavigation<CameraScreenNavigationProp>();
   const route = useRoute<CameraScreenRouteProp>();
 
-  const { name, email, event, isPastAudience } = route?.params ?? {
+  const { staffMember, name, email, event, isPastAudience } = route?.params ?? {
+    staffMember: 'staff',
     name: 'backup',
     email: 'backup@email.com',
     event: 'backup',
@@ -45,6 +46,7 @@ const CameraScreen: React.FC = () => {
     setPhotos(storedPhotos => [...storedPhotos, newPhotoWithID]);
     navigation.navigate('Album', {
       newPhoto: photograph,
+      staffMember,
       name,
       email,
       event,
