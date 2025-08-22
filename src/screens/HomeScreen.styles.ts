@@ -21,6 +21,7 @@ export const homeScreenStyles = StyleSheet.create({
   },
   input: {
     height: 50,
+    width: '75%',
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 8,

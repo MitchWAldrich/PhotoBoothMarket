@@ -34,6 +34,7 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { PhotoFilterRef } from '../types/PhotoFilter';
 import axios from 'axios';
 import UserFields from '../components/UserFields/UserFields';
+import CustomButton from '../components/Button/Button';
 
 const AlbumScreen: React.FC = () => {
   const takeAPic: PhotoFile | (() => PhotoFile) = {
@@ -330,46 +331,53 @@ const AlbumScreen: React.FC = () => {
         )}
       </View>
       <View style={albumScreenStyles.bottomButtons}>
-        <Button
+        <CustomButton
           onPress={applyOperaAtelierTwist}
           title={
             isFiltered
               ? 'Revert to the Original Photo'
               : 'The Opera Atelier Twist'
           }
-          color="gold"
-          accessibilityLabel="This button applies an Opera Atelier style filter to your photo"
+          color1="gold"
+          color2="gold"
         />
         <View style={albumScreenStyles.innerButtons}>
           <View style={albumScreenStyles.stackedInnerButtons}>
-            <Button
+            <CustomButton
               onPress={handleSaveFiltered}
               title="Save Original"
-              color="teal"
-              accessibilityLabel="This button saves the filtered photo to your camera roll."
+              color1="teal"
+              color2="teal"
             />
             <View style={albumScreenStyles.spacerHeight} />
-            <Button
+            <CustomButton
               onPress={handleSaveUnfiltered}
               title="Save Filtered"
-              color="teal"
-              accessibilityLabel="This button saves the original photo to your camera roll."
+              color1="teal"
+              color2="teal"
             />
           </View>
-          <Button
+          <CustomButton
             onPress={handleCreateUserWithImage}
             title="Save to Database"
-            color="teal"
-            accessibilityLabel="This button saves the original photo to your camera roll."
+            color1="teal"
+            color2="teal"
           />
         </View>
         <View style={albumScreenStyles.innerButtons}>
-          <Button
-            title="Take another picture"
+          <CustomButton
             onPress={() => navigation.navigate('Camera')}
+            title="Take another picture"
+            color1="teal"
+            color2="teal"
           />
           <View style={albumScreenStyles.spacerWidth} />
-          <Button title="Get user details" onPress={handleOpenUserFields} />
+          <CustomButton
+            onPress={handleOpenUserFields}
+            title="Get user details"
+            color1="gold"
+            color2="gold"
+          />
         </View>
       </View>
     </SafeAreaView>

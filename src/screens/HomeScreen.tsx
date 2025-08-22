@@ -127,11 +127,11 @@ const HomeScreen: React.FC = () => {
         />
       </View>
       <View style={homeScreenStyles.submit}>
-        <Button
+        <CustomButton
           onPress={handlePostRequest}
           title="Submit & Take Photo"
-          color="#841584"
-          accessibilityLabel="This button sends client data to the back end"
+          color1="#841584"
+          color2="#841584"
         />
         {postResponse !== '' && (
           <>
