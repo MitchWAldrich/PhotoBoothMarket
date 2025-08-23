@@ -2,7 +2,6 @@ import {
   SafeAreaView,
   Text,
   TextInput,
-  Button,
   StatusBar,
   useColorScheme,
   View,
