@@ -23,7 +23,7 @@ const UserFields: React.FC<UserFieldsProps> = ({
   const [staffMember, setStaffMember] = useState<string>('');
   const [client, setClient] = useState<string>('');
   const [clientEmail, setClientEmail] = useState<string>('');
-  const [isPastAudience, setIsPastAudience] = useState<boolean | null>(null);
+  const [isPastAudience, setIsPastAudience] = useState<boolean>(false);
   const [event, setEvent] = useState<string>('Market Street');
   const [isModalVisible, setIsModalVisible] =
     useState<boolean>(modalVisibility);
@@ -32,13 +32,30 @@ const UserFields: React.FC<UserFieldsProps> = ({
   const [isPressedYes, setIsPressedYes] = useState<boolean>(false);
 
   const handleSubmitUser = () => {
-    if (
-      !client.trim() ||
-      !clientEmail.trim() ||
-      !event.trim() ||
-      isPastAudience === null
-    ) {
-      Alert.alert('Missing Information', 'Please fill in all required fields.');
+    if (!client.trim()) {
+      Alert.alert('Missing Information', 'Please fill in name.');
+      return;
+    }
+    if (!clientEmail.trim()) {
+      Alert.alert('Missing Information', 'Please fill in email.');
+      return;
+    }
+    if (!event.trim()) {
+      Alert.alert('Missing Information', 'Please fill in event.');
+      return;
+    }
+    if (isPastAudience === null) {
+      Alert.alert(
+        'Missing Information',
+        'Please answer if you have seen an Opera Atelier Show before.',
+      );
+      return;
+    }
+    if (isPressedNo === true && isPressedYes === true) {
+      Alert.alert(
+        'Too many inputs',
+        'Please select only one option (Yes or No).',
+      );
       return;
     }
 
@@ -56,8 +73,11 @@ const UserFields: React.FC<UserFieldsProps> = ({
 
   const handlePastAudience = (button: 'yes' | 'no') => {
     if (button === 'yes') {
+      console.log('isPressedYes', isPressedYes);
+      setIsPastAudience(true);
       setIsPressedYes(prev => !prev); // toggle yes
     } else {
+      setIsPastAudience(false);
       setIsPressedNo(prev => !prev); // toggle no
     }
   };
