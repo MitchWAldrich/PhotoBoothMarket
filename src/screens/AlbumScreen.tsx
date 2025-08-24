@@ -5,6 +5,7 @@ import {
   PermissionsAndroid,
   Dimensions,
   Alert,
+  Text,
 } from 'react-native';
 import { PhotoFilter } from '../components/PhotoFilter/PhotoFilter';
 import { albumScreenStyles } from './AlbumScreen.styles';
@@ -261,7 +262,7 @@ const AlbumScreen: React.FC = () => {
       : screenWidth * 0.8) / calculatedWidth;
   const scaleY =
     (newPhotoOrientation === 'portrait'
-      ? screenHeight * 0.8
+      ? (screenHeight - tabBarHeight) * 0.8
       : screenHeight * 0.95) / calculatedHeight;
   const scale = Math.min(scaleX, scaleY); // To maintain aspect ratio
 
@@ -270,7 +271,7 @@ const AlbumScreen: React.FC = () => {
 
   // Optional: center the image
   const offsetX = (screenWidth - imageWidth) / 2;
-  const offsetY = ((screenHeight - tabBarHeight) * 0.8 - imageHeight) / 2;
+  const offsetY = (screenHeight * 0.8 - imageHeight) / 2 - tabBarHeight;
 
   useFocusEffect(
     useCallback(() => {
@@ -289,7 +290,9 @@ const AlbumScreen: React.FC = () => {
 
   if (!image1) return null;
 
-  const handleOpenUserFields = () => {};
+  const handleEditUserFields = () => {
+    // Open UserFields component, with fields pre-populated with date
+  };
 
   const handleToggleCamera = (openState: boolean) => {
     setIsButtonPressed(openState);
@@ -301,11 +304,13 @@ const AlbumScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={albumScreenStyles.container}>
+    <SafeAreaView
+      style={[albumScreenStyles.container, { paddingBottom: tabBarHeight }]}
+    >
       <UserFields
         callback={getUserValues}
         hasImage={hasImage}
-        modalVisibility={isModalVisible}
+        modalVisibility={!isModalVisible}
       />
       <View style={albumScreenStyles.imageContainer}>
         {isFiltered ? (
@@ -339,28 +344,29 @@ const AlbumScreen: React.FC = () => {
           color1="gold"
           color2="gold"
         />
-        <View style={albumScreenStyles.innerButtons}>
-          <View style={albumScreenStyles.stackedInnerButtons}>
+        <View style={albumScreenStyles.titleText}>
+          <Text style={albumScreenStyles.title}>Save</Text>
+          <View style={albumScreenStyles.innerButtons}>
             <CustomButton
               onPress={handleSaveFiltered}
-              title="Save Original"
+              title="Original"
               color1="teal"
               color2="teal"
             />
             <View style={albumScreenStyles.spacerHeight} />
             <CustomButton
               onPress={handleSaveUnfiltered}
-              title="Save Filtered"
+              title="Filtered"
+              color1="teal"
+              color2="teal"
+            />
+            <CustomButton
+              onPress={handleCreateUserWithImage}
+              title="to Database"
               color1="teal"
               color2="teal"
             />
           </View>
-          <CustomButton
-            onPress={handleCreateUserWithImage}
-            title="Save to Database"
-            color1="teal"
-            color2="teal"
-          />
         </View>
         <View style={albumScreenStyles.innerButtons}>
           <CustomButton
@@ -371,8 +377,8 @@ const AlbumScreen: React.FC = () => {
           />
           <View style={albumScreenStyles.spacerWidth} />
           <CustomButton
-            onPress={handleOpenUserFields}
-            title="Get user details"
+            onPress={handleEditUserFields}
+            title="Edit user details"
             color1="gold"
             color2="gold"
           />
