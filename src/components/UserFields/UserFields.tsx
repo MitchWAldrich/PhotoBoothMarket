@@ -27,7 +27,6 @@ const UserFields: React.FC<UserFieldsProps> = ({
   const [event, setEvent] = useState<string>('Market Street');
   const [isModalVisible, setIsModalVisible] =
     useState<boolean>(modalVisibility);
-  const [hasTakenImage, setHasTakenImage] = useState<boolean>(hasImage);
   const [isPressedNo, setIsPressedNo] = useState<boolean>(false);
   const [isPressedYes, setIsPressedYes] = useState<boolean>(false);
 

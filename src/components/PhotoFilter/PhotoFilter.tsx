@@ -9,13 +9,10 @@ import {
   LinearGradient,
   vec,
   Shadow,
-  AnimatedProp,
-  PathDef,
   Skia,
   Shader,
   ImageShader,
   Fill,
-  RoundedRect,
   Rect,
   SkImage,
   useCanvasRef,
@@ -37,7 +34,6 @@ export const PhotoFilter = forwardRef<PhotoFilterRef, PhotoFilterProps>(
       Dimensions.get('window');
     const tabBarHeight = useBottomTabBarHeight();
 
-    const [framePath, setFramePath] = useState<AnimatedProp<PathDef>>('');
     const [isReady, setIsReady] = useState<boolean>(false);
 
     const canvasRef = useCanvasRef();

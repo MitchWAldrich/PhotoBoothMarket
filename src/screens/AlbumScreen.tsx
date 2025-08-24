@@ -1,7 +1,6 @@
 import {
   SafeAreaView,
   View,
-  Button,
   Platform,
   PermissionsAndroid,
   Dimensions,
@@ -103,7 +102,6 @@ const AlbumScreen: React.FC = () => {
   const [newPhoto, setNewPhoto] = useState<PhotoFile>(
     route?.params?.newPhoto ?? takeAPic,
   );
-  const [photos, setPhotos] = useState<PhotoFileWithID[]>([]);
   const [isFiltered, setIsFiltered] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [framePath, setFramePath] = useState<AnimatedProp<PathDef>>('');
