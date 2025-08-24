@@ -5,7 +5,6 @@ export const albumScreenStyles = StyleSheet.create({
     flex: 2,
     justifyContent: 'space-around',
     alignItems: 'center',
-    padding: 10,
   }, 
   container: {
     flex: 1,
@@ -20,8 +19,7 @@ export const albumScreenStyles = StyleSheet.create({
   }, 
   innerImage: {
     flex: 1,
-    width: '100%',
-    backgroundColor: 'darkgrey',
+    backgroundColor: 'orange',
   },
   fullImage: {
     width: '100%',
@@ -36,10 +34,17 @@ export const albumScreenStyles = StyleSheet.create({
   stackedInnerButtons: {
     alignItems: 'center',
     padding: 10,
-  }, 
+  },
   title: {
     fontSize: 24,
     fontWeight: '600',
     color: '#333',
+  },
+  titleText: {
+    alignItems: 'center',
+    borderWidth: 2,
+    borderRadius: 10,
+    marginTop: 8,
+    padding: 6,
   },
 });
