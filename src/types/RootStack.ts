@@ -16,7 +16,7 @@ export type RootStackParamList = {
     name: string;
     email: string;
     event: string;
-    isPastAudience: boolean;
+    isPastAudience: boolean | null;
    } | undefined;
 };
 
