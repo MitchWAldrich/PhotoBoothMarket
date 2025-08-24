@@ -11,7 +11,7 @@ export const buttonStyles = StyleSheet.create({
     minWidth: 100,
   },
   submit: {
-    marginTop: 20,
+    marginTop: 10,
   },
   text: {
     color: '#fff',
