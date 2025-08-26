@@ -17,18 +17,29 @@ const UserFields: React.FC<UserFieldsProps> = ({
   callback,
   hasImage,
   modalVisibility,
+  name,
+  email,
+  isPastAudience,
+  event,
+  staffMember,
 }) => {
   const navigation = useNavigation<UserFieldsModalNavigationProp>();
 
-  const [staffMember, setStaffMember] = useState<string>('');
-  const [client, setClient] = useState<string>('');
-  const [clientEmail, setClientEmail] = useState<string>('');
-  const [isPastAudience, setIsPastAudience] = useState<boolean>(false);
-  const [event, setEvent] = useState<string>('Market Street');
+  const [oaStaffMember, setOaStaffMember] = useState<string>(staffMember ?? '');
+  const [client, setClient] = useState<string>(name ?? '');
+  const [clientEmail, setClientEmail] = useState<string>(email ?? '');
+  const [isOaPastAudience, setIsOaPastAudience] = useState<boolean | null>(
+    isPastAudience ?? null,
+  );
+  const [oaEvent, setOaEvent] = useState<string>(event ?? 'Market Street');
   const [isModalVisible, setIsModalVisible] =
     useState<boolean>(modalVisibility);
-  const [isPressedNo, setIsPressedNo] = useState<boolean>(false);
-  const [isPressedYes, setIsPressedYes] = useState<boolean>(false);
+  const [isPressedNo, setIsPressedNo] = useState<boolean>(
+    isPastAudience === false ? true : false,
+  );
+  const [isPressedYes, setIsPressedYes] = useState<boolean>(
+    isPastAudience === true ? true : false,
+  );
 
   const handleSubmitUser = () => {
     if (!client.trim()) {
@@ -39,7 +50,7 @@ const UserFields: React.FC<UserFieldsProps> = ({
       Alert.alert('Missing Information', 'Please fill in email.');
       return;
     }
-    if (!event.trim()) {
+    if (!oaEvent.trim()) {
       Alert.alert('Missing Information', 'Please fill in event.');
       return;
     }
@@ -58,32 +69,32 @@ const UserFields: React.FC<UserFieldsProps> = ({
       return;
     }
 
-    callback(staffMember, client, clientEmail, event, isPastAudience);
+    callback(oaStaffMember, client, clientEmail, oaEvent, isOaPastAudience);
     setIsModalVisible(false);
 
     navigation.navigate('Camera', {
-      staffMember: staffMember,
+      staffMember: oaStaffMember,
       name: client,
       email: clientEmail,
-      event: event,
-      isPastAudience,
+      event: oaEvent,
+      isPastAudience: isOaPastAudience,
     });
   };
 
   const handlePastAudience = (button: 'yes' | 'no') => {
     if (button === 'yes') {
       console.log('isPressedYes', isPressedYes);
-      setIsPastAudience(true);
+      setIsOaPastAudience(true);
       setIsPressedYes(prev => !prev); // toggle yes
     } else {
-      setIsPastAudience(false);
+      setIsOaPastAudience(false);
       setIsPressedNo(prev => !prev); // toggle no
     }
   };
 
   const handleDropdown = (val: string) => {
     console.log('getValue', val);
-    setStaffMember(val);
+    setOaStaffMember(val);
   };
 
   return (
@@ -115,7 +126,7 @@ const UserFields: React.FC<UserFieldsProps> = ({
             <Text style={userFieldsStyles.title}>What is this event?</Text>
             <TextInput
               style={userFieldsStyles.input}
-              onChangeText={setEvent}
+              onChangeText={setOaEvent}
               value={event}
               placeholder="Name of Event"
             />
