@@ -105,6 +105,7 @@ const AlbumScreen: React.FC = () => {
   );
   const [isFiltered, setIsFiltered] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isUserEdit, setIsUserEdit] = useState<boolean>(false);
   const [framePath, setFramePath] = useState<AnimatedProp<PathDef>>('');
 
   const photoFilterRef = useRef<PhotoFilterRef>(null);
@@ -291,7 +292,7 @@ const AlbumScreen: React.FC = () => {
   if (!image1) return null;
 
   const handleEditUserFields = () => {
-    // Open UserFields component, with fields pre-populated with date
+    setIsUserEdit(!isUserEdit);
   };
 
   const handleToggleCamera = (openState: boolean) => {
@@ -310,8 +311,20 @@ const AlbumScreen: React.FC = () => {
       <UserFields
         callback={getUserValues}
         hasImage={hasImage}
-        modalVisibility={!isModalVisible}
+        modalVisibility={isModalVisible}
       />
+      {isUserEdit && (
+        <UserFields
+          callback={getUserValues}
+          hasImage={hasImage}
+          modalVisibility={isUserEdit}
+          name={userName}
+          email={userEmail}
+          event={userEvent}
+          isPastAudience={userIsPastAudience}
+          staffMember={staffName}
+        />
+      )}
       <View style={albumScreenStyles.imageContainer}>
         {isFiltered ? (
           <PhotoFilter
