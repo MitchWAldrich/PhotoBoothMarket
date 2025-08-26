@@ -8,4 +8,9 @@ export interface UserFieldsProps {
   ) => void;
   hasImage: boolean;
   modalVisibility: boolean;
+  name?: string,
+  email?: string,
+  event?: string,
+  isPastAudience?: boolean | null,
+  staffMember?: string,
 }
