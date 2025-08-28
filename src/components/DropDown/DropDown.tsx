@@ -21,9 +21,20 @@ const items: DropdownItem[] = [
   { label: 'Andrea', value: 'Andrea' },
 ];
 
-const Dropdown: React.FC<DropdownProps> = ({ onSelect }) => {
+const Dropdown: React.FC<DropdownProps> = ({ onSelect, populatedVal }) => {
+  const getValue = (val: string | undefined) => {
+    if (!val) return null;
+
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].value === val)
+        return { label: `${items[i].label}`, value: `${items[i].value}` };
+    }
+  };
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selected, setSelected] = useState<DropdownItem | null>(null);
+  const [selected, setSelected] = useState<DropdownItem | null>(
+    getValue(populatedVal) ?? null,
+  );
 
   const handleSelect = (item: DropdownItem) => {
     setSelected(item);
