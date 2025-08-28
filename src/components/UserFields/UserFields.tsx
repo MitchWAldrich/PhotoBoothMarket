@@ -41,7 +41,7 @@ const UserFields: React.FC<UserFieldsProps> = ({
     isPastAudience === true ? true : false,
   );
 
-  const handleSubmitUser = () => {
+  const handleSubmitUser = (isEditting: boolean) => {
     if (!client.trim()) {
       Alert.alert('Missing Information', 'Please fill in name.');
       return;
@@ -72,13 +72,15 @@ const UserFields: React.FC<UserFieldsProps> = ({
     callback(oaStaffMember, client, clientEmail, oaEvent, isOaPastAudience);
     setIsModalVisible(false);
 
-    navigation.navigate('Camera', {
-      staffMember: oaStaffMember,
-      name: client,
-      email: clientEmail,
-      event: oaEvent,
-      isPastAudience: isOaPastAudience,
-    });
+    if (!isEditting) {
+      navigation.navigate('Camera', {
+        staffMember: oaStaffMember,
+        name: client,
+        email: clientEmail,
+        event: oaEvent,
+        isPastAudience: isOaPastAudience,
+      });
+    }
   };
 
   const handlePastAudience = (button: 'yes' | 'no') => {
@@ -108,7 +110,7 @@ const UserFields: React.FC<UserFieldsProps> = ({
         <View style={userFieldsStyles.modalOverlay}>
           <View style={userFieldsStyles.modalContent}>
             <Text style={userFieldsStyles.title}>Enter Staff Member Name:</Text>
-            <Dropdown onSelect={handleDropdown} />
+            <Dropdown onSelect={handleDropdown} populatedVal={staffMember} />
             <Text style={userFieldsStyles.title}>Tell us your name:</Text>
             <TextInput
               style={userFieldsStyles.input}
