@@ -12,5 +12,6 @@ export interface UserFieldsProps {
   email?: string,
   event?: string,
   isPastAudience?: boolean | null,
+  isSubmit?: boolean,
   staffMember?: string,
 }
