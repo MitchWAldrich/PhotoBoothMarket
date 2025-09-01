@@ -20,6 +20,7 @@ const UserFields: React.FC<UserFieldsProps> = ({
   name,
   email,
   isPastAudience,
+  isSubmit,
   event,
   staffMember,
 }) => {
@@ -41,7 +42,7 @@ const UserFields: React.FC<UserFieldsProps> = ({
     isPastAudience === true ? true : false,
   );
 
-  const handleSubmitUser = (isEditting: boolean) => {
+  const handleSubmitUser = () => {
     if (!client.trim()) {
       Alert.alert('Missing Information', 'Please fill in name.');
       return;
@@ -72,7 +73,7 @@ const UserFields: React.FC<UserFieldsProps> = ({
     callback(oaStaffMember, client, clientEmail, oaEvent, isOaPastAudience);
     setIsModalVisible(false);
 
-    if (!isEditting) {
+    if (isSubmit) {
       navigation.navigate('Camera', {
         staffMember: oaStaffMember,
         name: client,
