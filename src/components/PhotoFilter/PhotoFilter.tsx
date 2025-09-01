@@ -20,7 +20,7 @@ import {
 import { Dimensions, Text, View } from 'react-native';
 import { PhotoFilterProps, PhotoFilterRef } from '../../types/PhotoFilter';
 import { photoFilterStyles } from './PhotoFilter.styles';
-import { forwardRef, useImperativeHandle, useEffect, useState } from 'react';
+import { forwardRef, useImperativeHandle } from 'react';
 import brushStrokes from '../../assets/brushstrokes';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import RNFS from 'react-native-fs';
@@ -33,8 +33,6 @@ export const PhotoFilter = forwardRef<PhotoFilterRef, PhotoFilterProps>(
     const { width: screenWidth, height: screenHeight } =
       Dimensions.get('window');
     const tabBarHeight = useBottomTabBarHeight();
-
-    const [isReady, setIsReady] = useState<boolean>(false);
 
     const canvasRef = useCanvasRef();
 
@@ -82,11 +80,11 @@ export const PhotoFilter = forwardRef<PhotoFilterRef, PhotoFilterProps>(
 
     const texture = useImage(require('../../assets/bar2.jpg')); // texture overlay
 
-    useEffect(() => {
-      if (photo && texture) {
-        setIsReady(true);
-      }
-    }, [photo, texture]);
+    // useEffect(() => {
+    //   if (photo && texture) {
+    //     setIsReady(true);
+    //   }
+    // }, [photo, texture]);
 
     if (!photo) return;
     const temp = photo;
