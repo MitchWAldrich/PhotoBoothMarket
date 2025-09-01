@@ -378,6 +378,7 @@ const AlbumScreen: React.FC = () => {
               title="to Database"
               color1="teal"
               color2="teal"
+              isSubmit={true}
             />
           </View>
         </View>
