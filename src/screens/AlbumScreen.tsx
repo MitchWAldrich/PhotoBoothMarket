@@ -160,16 +160,36 @@ const AlbumScreen: React.FC = () => {
   const newPhotoImage = useImage(`file://${newPhoto?.path}`);
 
   const handleCreateUserWithImage = async () => {
-    if (
-      !staffName.trim() ||
-      !userName.trim() ||
-      !userEmail.trim() ||
-      !userEvent.trim() ||
-      userIsPastAudience ||
-      newPhotoImage ||
-      photoFilterRef.current
-    ) {
-      Alert.alert('Missing Information', 'Please fill in all required fields.');
+    if (!userName.trim()) {
+      Alert.alert('Missing Information', 'Please fill in name.');
+      return;
+    }
+    if (!userEmail.trim()) {
+      Alert.alert('Missing Information', 'Please fill in email.');
+      return;
+    }
+    if (!userEvent.trim()) {
+      Alert.alert('Missing Information', 'Please fill in event.');
+      return;
+    }
+    if (userIsPastAudience === null) {
+      Alert.alert(
+        'Missing Information',
+        'Please answer if you have seen an Opera Atelier Show before.',
+      );
+      return;
+    }
+    if (!staffName.trim()) {
+      Alert.alert('Missing Information', 'Please add staff name.');
+      return;
+    }
+
+    if (!newPhotoImage) {
+      Alert.alert('Missing Information', 'Please take a photo.');
+      return;
+    }
+    if (!photoFilterRef.current) {
+      Alert.alert('Missing Information', 'Please apply the filter.');
       return;
     }
 
