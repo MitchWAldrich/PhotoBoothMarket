@@ -353,6 +353,8 @@ const AlbumScreen: React.FC = () => {
             orientation={newPhotoOrientation ?? 'portrait'}
             photo={newPhotoImage ?? image1}
             path={framePath}
+            offsetX={offsetX}
+            offsetY={offsetY}
           />
         ) : (
           <Canvas style={albumScreenStyles.innerImage}>
