@@ -29,7 +29,7 @@ import { Buffer } from 'buffer';
 
 // function FilteredPhoto({ uri, width, height }) {
 export const PhotoFilter = forwardRef<PhotoFilterRef, PhotoFilterProps>(
-  ({ orientation, photo, path }, ref) => {
+  ({ orientation, photo, path, offsetX, offsetY }, ref) => {
     const { width: screenWidth, height: screenHeight } =
       Dimensions.get('window');
     const tabBarHeight = useBottomTabBarHeight();
@@ -104,9 +104,6 @@ export const PhotoFilter = forwardRef<PhotoFilterRef, PhotoFilterProps>(
     const imageWidth = calculatedWidth * scale;
     const imageHeight = calculatedHeight * scale;
 
-    // Optional: center the image
-    const offsetX = (screenWidth - imageWidth) / 2;
-    const offsetY = ((screenHeight - tabBarHeight) * 0.8 - imageHeight) / 2;
     const allAssetsLoaded = photo && texture && path;
 
     // Create the RuntimeEffect
