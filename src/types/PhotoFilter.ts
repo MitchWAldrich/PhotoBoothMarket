@@ -10,4 +10,6 @@ export interface PhotoFilterProps {
   orientation?: Orientation;
   photo?: SkImage | null;
   path?: AnimatedProp<PathDef>;
+  offsetX: number;
+  offsetY: number;
 }
