@@ -302,11 +302,16 @@ const AlbumScreen: React.FC = () => {
         calculateFramePath(imageWidth, imageHeight, offsetX, offsetY),
       );
 
+      if (route?.params?.newPhoto) {
+        setHasImage(true);
+        setNewPhoto(route.params.newPhoto);
+      }
+
       return () => {
         // Optional: cleanup when screen is unfocused
         console.log('Screen unfocused');
       };
-    }, [imageHeight, imageWidth, offsetX, offsetY]),
+    }, [imageHeight, imageWidth, offsetX, offsetY, route?.params?.newPhoto]),
   );
 
   if (!image1) return null;
@@ -332,6 +337,7 @@ const AlbumScreen: React.FC = () => {
         callback={getUserValues}
         hasImage={hasImage}
         modalVisibility={isModalVisible}
+        isSubmit={true}
       />
       {isUserEdit && (
         <UserFields
@@ -343,6 +349,7 @@ const AlbumScreen: React.FC = () => {
           event={userEvent}
           isPastAudience={userIsPastAudience}
           staffMember={staffName}
+          isSubmit={true}
         />
       )}
       <View style={albumScreenStyles.imageContainer}>
