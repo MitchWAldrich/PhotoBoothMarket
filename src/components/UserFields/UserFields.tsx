@@ -86,7 +86,6 @@ const UserFields: React.FC<UserFieldsProps> = ({
 
   const handlePastAudience = (button: 'yes' | 'no') => {
     if (button === 'yes') {
-      console.log('isPressedYes', isPressedYes);
       setIsOaPastAudience(true);
       setIsPressedYes(prev => !prev); // toggle yes
     } else {
@@ -96,7 +95,6 @@ const UserFields: React.FC<UserFieldsProps> = ({
   };
 
   const handleDropdown = (val: string) => {
-    console.log('getValue', val);
     setOaStaffMember(val);
   };
 
