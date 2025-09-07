@@ -76,7 +76,6 @@ const HomeScreen: React.FC = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
   const handleDropdown = (val: string) => {
-    console.log('getValue', val);
     setStaffMember(val);
   };
 
