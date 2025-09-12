@@ -333,12 +333,14 @@ const AlbumScreen: React.FC = () => {
     <SafeAreaView
       style={[albumScreenStyles.container, { paddingBottom: tabBarHeight }]}
     >
-      <UserFields
-        callback={getUserValues}
-        hasImage={hasImage}
-        modalVisibility={isModalVisible}
-        isSubmit={true}
-      />
+      {isModalVisible && (
+        <UserFields
+          callback={getUserValues}
+          hasImage={hasImage}
+          modalVisibility={isModalVisible}
+          isSubmit={true}
+        />
+      )}
       {isUserEdit && (
         <UserFields
           callback={getUserValues}
@@ -387,45 +389,51 @@ const AlbumScreen: React.FC = () => {
           color2="gold"
         />
         <View style={albumScreenStyles.titleText}>
-          <Text style={albumScreenStyles.title}>Save</Text>
+          {/* <Text style={albumScreenStyles.title}>Save</Text> */}
           <View style={albumScreenStyles.innerButtons}>
-            <CustomButton
-              onPress={handleSaveFiltered}
-              title="Original"
-              color1="teal"
-              color2="teal"
-            />
-            <View style={albumScreenStyles.spacerHeight} />
-            <CustomButton
-              onPress={handleSaveUnfiltered}
-              title="Filtered"
-              color1="teal"
-              color2="teal"
-            />
+            {/* <CustomButton
+                onPress={handleSaveFiltered}
+                title="Original"
+                color1="teal"
+                color2="teal"
+              />
+              <View style={albumScreenStyles.spacerHeight} />
+              <CustomButton
+                onPress={handleSaveUnfiltered}
+                title="Filtered"
+                color1="teal"
+                color2="teal"
+              /> */}
             <CustomButton
               onPress={handleCreateUserWithImage}
-              title="to Database"
+              title="Save to Database"
               color1="teal"
               color2="teal"
               isSubmit={true}
             />
+            <CustomButton
+              onPress={handleEditUserFields}
+              title="Edit user details"
+              color1="gold"
+              color2="gold"
+            />
           </View>
         </View>
-        <View style={albumScreenStyles.innerButtons}>
+        {/* <View style={albumScreenStyles.innerButtons}>
           <CustomButton
-            onPress={() => navigation.navigate('Camera')}
-            title="Take another picture"
-            color1="teal"
-            color2="teal"
-          />
-          <View style={albumScreenStyles.spacerWidth} />
+              onPress={() => navigation.navigate('Camera')}
+              title="Take another picture"
+              color1="teal"
+              color2="teal"
+            />
+            <View style={albumScreenStyles.spacerWidth} />
           <CustomButton
             onPress={handleEditUserFields}
             title="Edit user details"
             color1="gold"
             color2="gold"
           />
-        </View>
+        </View> */}
       </View>
     </SafeAreaView>
   );
